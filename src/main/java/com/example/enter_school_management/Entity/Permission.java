@@ -10,7 +10,7 @@ import javax.validation.constraints.NotBlank;
 public class Permission {
     @TableId(value = "campus_id")
     @NotBlank(message = "校区id不能为空")
-    private long campus_id;
+    private Long campus_id;
     @TableId(value = "stu_id")
     @NotBlank(message = "学号不能为空")
     private String stu_id;

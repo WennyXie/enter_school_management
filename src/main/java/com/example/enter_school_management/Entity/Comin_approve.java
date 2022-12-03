@@ -10,7 +10,7 @@ import java.sql.Date;
 @Data
 public class Comin_approve {
     @TableId(value = "comin_app_id", type = IdType.AUTO)
-    private long comin_app_id;
+    private Long comin_app_id;
     @NotBlank(message = "学号不能为空")
     private String stu_id;
     @NotBlank(message = "返校原因不能为空")

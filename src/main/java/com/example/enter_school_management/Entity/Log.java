@@ -10,7 +10,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class Log {
     @TableId(value = "log_id", type = IdType.AUTO)
-    private long log_id;
+    private Long log_id;
     @NotBlank(message = "学号不能为空")
     private String stu_id;
     @NotBlank(message = "进出校时间不能为空")

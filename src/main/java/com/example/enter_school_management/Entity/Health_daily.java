@@ -11,7 +11,7 @@ import java.sql.Time;
 @Data
 public class Health_daily {
     @TableId(value = "hd_id", type = IdType.AUTO)
-    private long hd_id;
+    private Long hd_id;
     @NotBlank(message = "学生id不能为空")
     private String stu_id;
     @NotBlank(message = "体温不能为空")

@@ -11,7 +11,7 @@ import java.sql.Time;
 public class Outside_time {
     @TableId(value = "ot_id")
     @NotBlank(message = "出校时间id不能为空")
-    private long ot_id;
+    private Long ot_id;
     @NotBlank(message = "学号不能为空")
     private String stu_id;
     @NotBlank(message = "日期不能为空")

@@ -10,7 +10,7 @@ import java.sql.Date;
 @Data
 public class Leave_application {
     @TableId(value = "leav_app_id", type = IdType.AUTO)
-    private long leav_app_id;
+    private Long leav_app_id;
     @NotBlank(message = "学号不能为空")
     private String stu_id;
     @NotBlank(message = "离校原因不能为空")

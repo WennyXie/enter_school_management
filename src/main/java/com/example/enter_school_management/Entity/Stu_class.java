@@ -7,9 +7,9 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 
 @Data
-public class Class {
+public class Stu_class {
     @TableId(value = "class_id", type = IdType.AUTO)
-    private long class_id;
+    private Long class_id;
     @NotBlank(message = "班级名称不能为空")
     private String class_name;
     @NotBlank(message = "院系id不能为空")

@@ -8,7 +8,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class Risky_places {
     @TableId(value = "rp_id", type = IdType.AUTO)
-    private long rp_id;
+    private Long rp_id;
     @NotBlank(message = "城市不能为空")
     private String city;
     @NotBlank(message = "区不能为空")
