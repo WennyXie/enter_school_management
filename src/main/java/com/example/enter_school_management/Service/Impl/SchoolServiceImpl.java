@@ -6,7 +6,9 @@ import com.example.enter_school_management.Entity.School;
 import com.example.enter_school_management.Mapper.SchoolMapper;
 import com.example.enter_school_management.Service.SchoolService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> implements SchoolService {
     @Autowired
     SchoolMapper schoolMapper;
@@ -14,6 +16,6 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
     @Override
     public String getSchoolcityById(Long schoolId){
         School school = getOne(new QueryWrapper<School>().eq("school_id",schoolId));
-        return school.getSchool_city();
+        return school.getSchoolCity();
     }
 }

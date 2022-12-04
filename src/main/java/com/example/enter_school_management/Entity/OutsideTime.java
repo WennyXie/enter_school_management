@@ -8,12 +8,12 @@ import java.sql.Date;
 import java.sql.Time;
 
 @Data
-public class Outside_time {
+public class OutsideTime {
     @TableId(value = "ot_id")
     @NotBlank(message = "出校时间id不能为空")
-    private Long ot_id;
+    private Long otId;
     @NotBlank(message = "学号不能为空")
-    private String stu_id;
+    private String stuId;
     @NotBlank(message = "日期不能为空")
     private Date date;
     @NotBlank(message = "时长不能为空")

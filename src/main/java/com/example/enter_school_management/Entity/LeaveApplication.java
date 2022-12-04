@@ -8,27 +8,27 @@ import javax.validation.constraints.NotBlank;
 import java.sql.Date;
 
 @Data
-public class Leave_application {
+public class LeaveApplication {
     @TableId(value = "leav_app_id", type = IdType.AUTO)
-    private Long leav_app_id;
+    private Long leavAppId;
     @NotBlank(message = "学号不能为空")
-    private String stu_id;
+    private String stuId;
     @NotBlank(message = "离校原因不能为空")
-    private String leav_reason;
+    private String leavReason;
     @NotBlank(message = "目的地城市不能为空")
-    private String dest_city;
+    private String destCity;
     @NotBlank(message = "目的地区不能为空")
-    private String dest_district;
+    private String destDistrict;
     @NotBlank(message = "目的地街道不能为空")
-    private String dest_street;
+    private String destStreet;
     @NotBlank(message = "预计离校日期不能为空")
-    private Date exp_leavdate;
+    private Date expLeavdate;
     @NotBlank(message = "预计返校日期不能为空")
-    private Date exp_retdate;
+    private Date expRetdate;
     @NotBlank(message = "申请状态不能为空")
     private int status;
-    private String current_admin_id;
-    private String reject_reason;
+    private String currentAdminId;
+    private String rejectReason;
     @NotBlank(message = "申请日期不能为空")
-    private Date current_date;
+    private Date currentDate;
 }

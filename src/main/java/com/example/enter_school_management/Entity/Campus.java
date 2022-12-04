@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class Campus {
     @TableId(value = "campus_id", type = IdType.AUTO)
-    private Long campus_id;
+    private Long campusId;
     @NotBlank(message = "校区名称不能为空")
-    private String campus_name;
+    private String campusName;
 }

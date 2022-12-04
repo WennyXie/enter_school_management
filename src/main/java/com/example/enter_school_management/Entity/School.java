@@ -9,9 +9,9 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class School {
     @TableId(value = "school_id", type = IdType.AUTO)
-    private Long school_id;
+    private Long schoolId;
     @NotBlank(message = "学校名称不能为空")
-    private String school_name;
+    private String schoolName;
     @NotBlank(message = "学校所在城市不能为空")
-    private String school_city;
+    private String schoolCity;
 }

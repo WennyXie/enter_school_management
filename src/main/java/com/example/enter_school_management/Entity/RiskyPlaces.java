@@ -6,9 +6,9 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 @Data
-public class Risky_places {
+public class RiskyPlaces {
     @TableId(value = "rp_id", type = IdType.AUTO)
-    private Long rp_id;
+    private Long rpId;
     @NotBlank(message = "城市不能为空")
     private String city;
     @NotBlank(message = "区不能为空")

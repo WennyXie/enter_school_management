@@ -16,14 +16,20 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     StudentMapper studentMapper;
 
     @Override
-    public Student getStudentById(String stu_id){
-        return getOne(new QueryWrapper<Student>().eq("stu_id",stu_id));
+    public Student getStudentById(String stuId){
+        return getOne(new QueryWrapper<Student>().eq("stu_id", stuId));
     }
 
     @Override
-    public List<Student> getAllStudent(){
+    public List<Student> getAllStudent(String stuId){
         QueryWrapper<Student> studentQueryWrapper = new QueryWrapper<>();
-        studentQueryWrapper.isNotNull("stu_id");
+        Student student = getOne(studentQueryWrapper.eq("stu_id",stuId));
         return studentMapper.selectList(studentQueryWrapper);
+    }
+
+    @Override
+    public Long getSchoolIdById(String stuId){
+        Student student = getStudentById(stuId);
+        return student.getStuSchoolId();
     }
 }

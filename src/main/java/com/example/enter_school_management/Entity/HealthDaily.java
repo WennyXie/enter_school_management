@@ -9,13 +9,13 @@ import java.sql.Date;
 import java.sql.Time;
 
 @Data
-public class Health_daily {
+public class HealthDaily {
     @TableId(value = "hd_id", type = IdType.AUTO)
-    private Long hd_id;
+    private Long hdId;
     @NotBlank(message = "学生id不能为空")
-    private String stu_id;
+    private String stuId;
     @NotBlank(message = "体温不能为空")
-    private Float body_temperature;
+    private Float bodyTemperature;
     @NotBlank(message = "所在城市不能为空")
     private String city;
     @NotBlank(message = "所在区不能为空")
@@ -26,6 +26,5 @@ public class Health_daily {
     private Date date;
     @NotBlank(message = "填报时间不能为空")
     private Time time;
-    @NotBlank(message = "健康日报状态不能为空")
-    private int hd_status;
+    private Integer hdStatus;
 }
