@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.example.enter_school_management.Common.lang.Const.HDNotUpdated;
+
 @Service
 public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> implements StudentService {
     @Autowired
@@ -21,9 +23,9 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     }
 
     @Override
-    public List<Student> getAllStudent(String stuId){
+    public List<Student> getAllStudent(){
         QueryWrapper<Student> studentQueryWrapper = new QueryWrapper<>();
-        Student student = getOne(studentQueryWrapper.eq("stu_id",stuId));
+        studentQueryWrapper.isNotNull("stu_id");
         return studentMapper.selectList(studentQueryWrapper);
     }
 
@@ -31,5 +33,12 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     public Long getSchoolIdById(String stuId){
         Student student = getStudentById(stuId);
         return student.getStuSchoolId();
+    }
+
+    @Override
+    public List<Student> getStudentByHDStatus(int hdStatus){
+        QueryWrapper<Student> studentQueryWrapper = new QueryWrapper<>();
+        studentQueryWrapper.eq("hd_updated", hdStatus);
+        return studentMapper.selectList(studentQueryWrapper);
     }
 }

@@ -25,4 +25,6 @@ public class Student {
     private Long stuClassId;
     @NotBlank(message = "学生所在学校不能为空")
     private Long stuSchoolId;
+    @NotBlank(message = "健康日报填写状态不能为空")
+    private int hdUpdated;
 }

@@ -8,5 +8,6 @@ import java.util.List;
 public interface StudentService extends IService<Student> {
     Student getStudentById(String stuId);
     Long getSchoolIdById(String stuId);
-    List<Student> getAllStudent(String stuId);
+    List<Student> getAllStudent();
+    List<Student> getStudentByHDStatus(int hdStatus);
 }

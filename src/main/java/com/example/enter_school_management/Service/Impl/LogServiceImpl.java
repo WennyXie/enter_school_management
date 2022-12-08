@@ -12,7 +12,10 @@ import com.example.enter_school_management.Service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Objects;
 
 import static com.example.enter_school_management.Common.lang.Const.inSchool;
@@ -39,8 +42,11 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogSe
         log.setLogStatus(1-lastLog.getLogStatus());
         Student student = studentService.getStudentById(logDto.getStuId());
         log.setDeptId(stuClassService.getById(student.getStuClassId()).getDeptId());
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        log.setLogDatetime(timestamp);
+        long d = System.currentTimeMillis();
+        Date currentDate = new Date(d);
+        Time currentTime = new Time(d);
+        log.setLogDate(currentDate);
+        log.setLogTime(currentTime);
         logMapper.insert(log);
         return log.getLogId();
     }
@@ -48,7 +54,14 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogSe
     @Override
     public Log getLatestLog(String stuId){
         Log lastLog = getOne(new QueryWrapper<Log>().eq("stu_id",stuId)
-                .orderByDesc("log_datetime").last("limit 1"));
+                .orderByDesc("log_date").orderByDesc("log_time").last("limit 1"));
         return lastLog;
+    }
+
+    @Override
+    public List<Log> getYesterdayLogByStuId(Date yesterday, String stuId){
+        QueryWrapper<Log> logQueryWrapper = new QueryWrapper<>();
+        logQueryWrapper.eq("log_date",yesterday).eq("stu_id",stuId).orderByAsc("log_time");
+        return logMapper.selectList(logQueryWrapper);
     }
 }

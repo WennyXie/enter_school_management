@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface HealthDailyService extends IService<HealthDaily> {
     List<HealthDaily> getLastnDayHealthDaily(String stuId, int days);
+    List<HealthDaily> getYesterDayUnsafeHealthDaily();
     boolean HDisSafe(Long HDid,String schoolCity, List<RiskyPlaces> riskyPlaces);
     Long saveHD(HealthDailyDto healthDailyDto);
 }

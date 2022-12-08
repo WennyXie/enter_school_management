@@ -7,6 +7,7 @@ import com.example.enter_school_management.Entity.Student;
 import com.example.enter_school_management.Service.AdminService;
 import com.example.enter_school_management.Service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,9 +23,13 @@ public class LoginController {
     @Autowired
     AdminService adminService;
 
+    //@Scheduled(cron="0/5 * *  * * ? ")
     @PostMapping("/test")
-    public Result getAll(@RequestParam String stuId){
-        List<Student> studentList = studentService.getAllStudent(stuId);
+    public Result getAll(){
+        List<Student> studentList = studentService.getAllStudent();
+        for(Student s:studentList){
+            System.out.println(s.getStuName());
+        }
         return Result.succ(studentList);
     }
 

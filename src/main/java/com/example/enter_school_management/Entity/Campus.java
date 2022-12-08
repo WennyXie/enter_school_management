@@ -12,4 +12,6 @@ public class Campus {
     private Long campusId;
     @NotBlank(message = "校区名称不能为空")
     private String campusName;
+    @NotBlank(message = "校区管控状态不能为空")
+    private int campusStatus;
 }

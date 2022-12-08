@@ -34,7 +34,7 @@ public class LeaveApplicationController {
         return Result.succ("出校申请提交成功！等待审核中——");
     }
 
-    @GetMapping("/getAllDuty")
+    @PostMapping("/getAllDuty")
     public Result getAllDutyLA(@RequestParam String adminId){
         Admin currentAdmin = adminService.getAdminById(adminId);
         if(currentAdmin.getAdminType() == roleInstructor) {

@@ -7,6 +7,7 @@ import com.example.enter_school_management.Entity.HealthDaily;
 import com.example.enter_school_management.Entity.RiskyPlaces;
 import com.example.enter_school_management.Mapper.HealthDailyMapper;
 import com.example.enter_school_management.Service.HealthDailyService;
+import com.example.enter_school_management.Service.YesterdayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,8 @@ import static com.example.enter_school_management.Common.lang.Const.*;
 public class HealthDailyServiceImpl extends ServiceImpl<HealthDailyMapper, HealthDaily> implements HealthDailyService {
     @Autowired
     HealthDailyMapper health_dailyMapper;
+    @Autowired
+    YesterdayService yesterdayService;
 
     @Override
     public List<HealthDaily> getLastnDayHealthDaily(String stuId, int days){
@@ -37,6 +40,14 @@ public class HealthDailyServiceImpl extends ServiceImpl<HealthDailyMapper, Healt
 //java.util.Date日期转换成转成java.sql.Date格式
         Date daysBefore =new Date(utilDate.getTime());
         healthDailyQueryWrapper.eq("stu_id", stuId).between("date",daysBefore,currentDate);
+        return health_dailyMapper.selectList(healthDailyQueryWrapper);
+    }
+
+    @Override
+    public List<HealthDaily> getYesterDayUnsafeHealthDaily(){
+        QueryWrapper<HealthDaily> healthDailyQueryWrapper = new QueryWrapper<>();
+        Date yesterday =yesterdayService.yesterday();
+        healthDailyQueryWrapper.eq("hd_status",HDUnsafe).eq("date",yesterday);
         return health_dailyMapper.selectList(healthDailyQueryWrapper);
     }
 
