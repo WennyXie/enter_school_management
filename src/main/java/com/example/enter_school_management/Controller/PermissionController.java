@@ -12,6 +12,7 @@ public class PermissionController {
     @Autowired
     PermissionService permissionService;
 
+    //每日五点更新每位同学的进校权限
     @Scheduled(cron = "0 0 5 * * ?")
     void updatePerm(){
         permissionService.dailyUpdatePermission();

@@ -4,5 +4,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.enter_school_management.Entity.OutsideTime;
 
 public interface OutsideTimeService extends IService<OutsideTime> {
-    void dailyUpdateOutsideTime();
+    void dailyUpdateOutsideTime();//每日存储每位学生的离校总时长
 }

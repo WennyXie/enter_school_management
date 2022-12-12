@@ -22,6 +22,7 @@ public class CampusController {
     @Autowired
     PermissionService permissionService;
 
+    //更改校区管控状态
     @PostMapping("/changeStatus")
     public Result campusChangeStatus(Campus campus){
         campusService.updateById(campus);

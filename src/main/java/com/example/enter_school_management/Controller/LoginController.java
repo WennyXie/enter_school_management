@@ -24,14 +24,14 @@ public class LoginController {
     AdminService adminService;
 
     //@Scheduled(cron="0/5 * *  * * ? ")
-    @PostMapping("/test")
+    /*@PostMapping("/test")
     public Result getAll(){
         List<Student> studentList = studentService.getAllStudent();
         for(Student s:studentList){
             System.out.println(s.getStuName());
         }
         return Result.succ(studentList);
-    }
+    }*/
 
     //userType为0代表学生，为1代表辅导员，为2代表院系管理员，为3代表超级管理员
     @PostMapping("/")
@@ -39,12 +39,12 @@ public class LoginController {
         int userType = loginDto.getUserType();
         String id = loginDto.getId();
         if(userType == roleStudent){
-            if(studentService.getStudentById(id) != null)
+            if(studentService.getById(id) != null)
                 return Result.succ("学生登陆成功！");
             return Result.fail("未查询到该学生信息！");
         }
         else {
-            Admin admin = adminService.getAdminById(id);
+            Admin admin = adminService.getById(id);
             if (admin != null && admin.getAdminType() == userType) {
                 if (userType == roleInstructor) return Result.succ("辅导员登陆成功！");
                 if (userType == roleDeptAdmin) return Result.succ("院系管理员登陆成功！");

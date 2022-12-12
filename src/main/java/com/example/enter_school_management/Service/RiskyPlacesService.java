@@ -6,5 +6,5 @@ import com.example.enter_school_management.Entity.RiskyPlaces;
 import java.util.List;
 
 public interface RiskyPlacesService extends IService<RiskyPlaces> {
-    List<RiskyPlaces> getAllRP();
+    List<RiskyPlaces> getAllRP();//获取所有的风险地区
 }

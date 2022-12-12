@@ -8,7 +8,7 @@ import java.sql.Date;
 import java.util.List;
 
 public interface LogService extends IService<Log> {
-    Long saveLog(LogDto logDto);
-    Log getLatestLog(String stuId);
-    List<Log> getYesterdayLogByStuId(Date yesterday, String stuId);
+    Long saveLog(LogDto logDto);//存储进出校记录并返回id
+    Log getLatestLog(String stuId);//获取某学生最后一次进出校记录
+    List<Log> getYesterdayLogByStuId(Date yesterday, String stuId);//根据学生id获取该学生过去一天的进出校记录
 }

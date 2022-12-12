@@ -13,8 +13,4 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     @Autowired
     AdminMapper adminMapper;
 
-    @Override
-    public Admin getAdminById(String adminId){
-        return getOne(new QueryWrapper<Admin>().eq("admin_id",adminId));
-    }
 }

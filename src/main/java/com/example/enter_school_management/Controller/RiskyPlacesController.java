@@ -12,6 +12,7 @@ public class RiskyPlacesController {
     @Autowired
     RiskyPlacesService riskyPlacesService;
 
+    //增加风险地区
     @PostMapping("/save")
     public Result saveRP(@RequestBody RiskyPlaces riskyPlaces){
         riskyPlaces.setRpId(null);
@@ -19,12 +20,14 @@ public class RiskyPlacesController {
         return Result.succ("新增风险地区成功");
     }
 
+    //修改风险地区
     @PostMapping("/update")
     public Result updateRP(@RequestBody RiskyPlaces riskyPlaces){
         riskyPlacesService.updateById(riskyPlaces);
         return Result.succ("更新风险地区成功");
     }
 
+    //删除风险地区
     @PostMapping("/delete")
     public Result deleteRP(@RequestParam Long RPId){
         riskyPlacesService.removeById(RPId);

@@ -29,15 +29,17 @@ public class CominApproveController {
     @Autowired
     CampusService campusService;
 
+    //学生填写返校申请
     @PostMapping("/fillin")
     public Result fillInCA(@RequestBody CominApproveDto cominApproveDto){
         cominApproveService.saveCA(cominApproveDto);
         return Result.succ("返校申请提交成功！等待审核中——");
     }
 
+    //管理员获取所有职权范围内的返校申请
     @PostMapping("/getAllDuty")
-    public Result getAllDutyLA(@RequestParam String adminId){
-        Admin currentAdmin = adminService.getAdminById(adminId);
+    public Result getAllDutyCA(@RequestParam String adminId){
+        Admin currentAdmin = adminService.getById(adminId);
         if(currentAdmin.getAdminType() == roleInstructor) {
             List<CominApprove> cominApproves = cominApproveService.getCAByStatus(appSubmit);
             return Result.succ("辅导员返校申请审核列表获取成功！",cominApproves);
@@ -53,6 +55,7 @@ public class CominApproveController {
         return Result.fail("未找到对应管理员！");
     }
 
+    //检查返回的7日健康日报是否有异常
     @PostMapping("/check")
     public Result checkCA(@RequestParam Long CAId){
         CominApprove CA = cominApproveService.getById(CAId);
@@ -65,6 +68,7 @@ public class CominApproveController {
         return Result.succ("该生7日健康日报正常！");
     }
 
+    //管理员拒绝学生的返校申请
     @PostMapping("/reject")
     public Result rejectLA(@RequestParam Long CAId,@RequestParam String rejectReason,@RequestParam String adminID){
         CominApprove CA = cominApproveService.getById(CAId);
@@ -75,10 +79,11 @@ public class CominApproveController {
         return Result.succ("拒绝返校申请成功！");
     }
 
+    //管理员同意学生的返校申请
     @PostMapping("/approve")
-    public Result approveLA(@RequestParam Long CAId,@RequestParam String adminID){
+    public Result approveCA(@RequestParam Long CAId,@RequestParam String adminID){
         CominApprove CA = cominApproveService.getById(CAId);
-        Admin currentAdmin = adminService.getAdminById(adminID);
+        Admin currentAdmin = adminService.getById(adminID);
         CA.setCurrentAdminId(adminID);
         if(currentAdmin.getAdminType() == roleInstructor) {
             CA.setStatus(appITApprove);
@@ -100,6 +105,7 @@ public class CominApproveController {
         return Result.fail("未找到对应管理员！");
     }
 
+    //学生查询自己所有的返校申请
     @PostMapping("/myLA")
     public Result getMyLA(@RequestParam String stuId){
         List<CominApprove> cominApproves = cominApproveService.getCAByStuId(stuId);

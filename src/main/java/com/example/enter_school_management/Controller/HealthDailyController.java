@@ -28,6 +28,7 @@ public class HealthDailyController {
     @Autowired
     RiskyPlacesService risky_placesService;
 
+    //学生填写健康日报
     @PostMapping ("/fillin")
     public Result fillInHealthDaily(@RequestBody HealthDailyDto health_dailyDto){
         Student student = studentService.getById(health_dailyDto.getStuId());
@@ -43,6 +44,7 @@ public class HealthDailyController {
         return Result.succ("健康日报提交成功");
     }
 
+    //获取学生过去7天的健康日报
     @PostMapping("/nDayrecords")
     public Result DaysRecord(@RequestParam String stuId,@RequestParam int days){
         List<HealthDaily> records = health_dailyService.getLastnDayHealthDaily(stuId,days);

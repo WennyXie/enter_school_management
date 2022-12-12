@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 @Service
 public class YesterdayService {
+    //获取昨日日期
     public Date yesterday(){
         java.util.Date utilDate = new java.util.Date();
         Calendar calendar =new GregorianCalendar();

@@ -7,8 +7,8 @@ import com.example.enter_school_management.Entity.LeaveApplication;
 import java.util.List;
 
 public interface LeaveApplicationService extends IService<LeaveApplication> {
-    Long saveLA(LeaveApplicationDto leaveApplicationDto);
-    List<LeaveApplication> getLAByStatus(int status);
-    List<LeaveApplication> getAllLA();
-    List<LeaveApplication> getLAByStuId(String stuId);
+    Long saveLA(LeaveApplicationDto leaveApplicationDto);//存储离校申请并返回id
+    List<LeaveApplication> getLAByStatus(int status);//根据申请状态获取所有离校申请
+    List<LeaveApplication> getAllLA();//获取所有离校申请
+    List<LeaveApplication> getLAByStuId(String stuId);//根据学号获取离校申请
 }
