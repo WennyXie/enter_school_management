@@ -1,6 +1,7 @@
 package com.example.enter_school_management.Controller;
 
 import com.example.enter_school_management.Common.Dto.CominApproveDto;
+import com.example.enter_school_management.Common.Dto.GetLACADto;
 import com.example.enter_school_management.Common.Dto.LeaveApplicationDto;
 import com.example.enter_school_management.Common.lang.Result;
 import com.example.enter_school_management.Entity.*;
@@ -106,10 +107,37 @@ public class CominApproveController {
     }
 
     //学生查询自己所有的返校申请
-    @PostMapping("/myLA")
+    @PostMapping("/myCA")
     public Result getMyLA(@RequestParam String stuId){
         List<CominApprove> cominApproves = cominApproveService.getCAByStuId(stuId);
         return Result.succ("获取返校申请列表成功！",cominApproves);
+    }
+
+    //查询学生的返校申请，支持按状态进行筛选
+    @PostMapping("/stuCA")
+    public Result getstuCA(@RequestBody GetLACADto getLACADto){
+        if(getLACADto.getStatus() == appSubmit){
+            return Result.succ(cominApproveService.getCAByStuIdAndStatus(getLACADto.getStuId(),appSubmit));
+        }
+        else if(getLACADto.getStatus() == appITApprove){
+            return Result.succ(cominApproveService.getCAByStuIdAndStatus(getLACADto.getStuId(),appITApprove));
+        }
+        else if(getLACADto.getStatus() == appDAApprove){
+            return Result.succ(cominApproveService.getCAByStuIdAndStatus(getLACADto.getStuId(),appDAApprove));
+        }
+        else if(getLACADto.getStatus() == appReject){
+            return Result.succ(cominApproveService.getCAByStuIdAndStatus(getLACADto.getStuId(),appReject));
+        }
+        else{
+            return Result.succ(cominApproveService.getCAByStuId(getLACADto.getStuId()));
+        }
+    }
+
+    //过去n天尚未批准的入校申请数量及详细信息
+    @PostMapping("/lastndayUncheck")
+    public Result lastndayUncheck(@RequestParam int days){
+        List<CominApprove> cominApproves = cominApproveService.getLastNDayUncheckedLA(days);
+        return Result.succ(cominApproves.size(),cominApproves);
     }
 
 }

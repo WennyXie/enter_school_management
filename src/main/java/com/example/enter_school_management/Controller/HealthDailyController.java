@@ -44,11 +44,11 @@ public class HealthDailyController {
         return Result.succ("健康日报提交成功");
     }
 
-    //获取学生过去7天的健康日报
+    //获取学生过去n天的健康日报
     @PostMapping("/nDayrecords")
     public Result DaysRecord(@RequestParam String stuId,@RequestParam int days){
         List<HealthDaily> records = health_dailyService.getLastnDayHealthDaily(stuId,days);
-        return Result.succ("成功获取过去7天该生填写健康日报！", records);
+        return Result.succ("成功获取过去"+days+"天该生填写健康日报！", records);
     }
 
 

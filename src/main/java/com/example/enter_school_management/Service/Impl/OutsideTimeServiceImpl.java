@@ -1,6 +1,8 @@
 package com.example.enter_school_management.Service.Impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.enter_school_management.Entity.HealthDaily;
 import com.example.enter_school_management.Entity.Log;
 import com.example.enter_school_management.Entity.OutsideTime;
 import com.example.enter_school_management.Entity.Student;
@@ -13,9 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.LocalTime;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import static com.example.enter_school_management.Common.lang.Const.*;
@@ -83,5 +88,34 @@ public class OutsideTimeServiceImpl extends ServiceImpl<OutsideTimeMapper, Outsi
             outsideTime.setOtTime(totalDurationMillis);
             save(outsideTime);
         }
+    }
+
+    @Override
+    public List<OutsideTime> getLastnDayOutsideTime(String stuId, int days){
+        QueryWrapper<OutsideTime> outsideTimeQueryWrapper = new QueryWrapper<>();
+        java.util.Date utilDate = new java.util.Date();
+        Date currentDate = new Date(utilDate.getTime());
+        Calendar calendar =new GregorianCalendar();
+        calendar.setTime(utilDate);
+        calendar.add(Calendar.DATE, -days);
+// calendar的time转成java.util.Date格式日期
+        utilDate = (java.util.Date)calendar.getTime();
+//java.util.Date日期转换成转成java.sql.Date格式
+        Date daysBefore =new Date(utilDate.getTime());
+        outsideTimeQueryWrapper.eq("stu_id", stuId).between("date",daysBefore,currentDate);
+        return outsideTimeMapper.selectList(outsideTimeQueryWrapper);
+    }
+
+    @Override
+    public boolean LastOutsideTimeOver24h(Log lastlog){
+        long nd = 1000 * 24 * 60 * 60;
+        java.util.Date date = new java.util.Date();
+        java.util.Date lastLogDate = new java.util.Date();
+        long time = lastlog.getLogDate().getTime() + lastlog.getLogTime().getTime();
+        lastLogDate.setTime(time);
+        long diff = date.getTime()-lastLogDate.getTime();
+        // 计算差多少天
+        long day = diff / nd;
+        return day >= 1;
     }
 }

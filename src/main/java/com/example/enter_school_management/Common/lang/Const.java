@@ -37,4 +37,6 @@ public class Const {
     public static final int lastInschool = 3;
     public static final Long allDayOutsideSchool = 86400000L;
     public static final Long allDayInsideSchool = 0L;
+
+    public static final int oneYear = 365;
 }

@@ -1,6 +1,8 @@
 package com.example.enter_school_management.Controller;
 
+import com.example.enter_school_management.Common.Dto.GetLACADto;
 import com.example.enter_school_management.Common.Dto.LeaveApplicationDto;
+import com.example.enter_school_management.Common.lang.Const;
 import com.example.enter_school_management.Common.lang.Result;
 import com.example.enter_school_management.Entity.Admin;
 import com.example.enter_school_management.Entity.LeaveApplication;
@@ -17,6 +19,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.example.enter_school_management.Common.lang.Const.*;
+import static java.sql.Types.NULL;
 
 @RestController
 @RequestMapping("/LA")
@@ -103,6 +106,33 @@ public class LeaveApplicationController {
     public Result getMyLA(@RequestParam String stuId){
         List<LeaveApplication> leaveApplications = leaveApplicationService.getLAByStuId(stuId);
         return Result.succ("获取出校申请列表成功！",leaveApplications);
+    }
+
+    //查询学生的离校申请，支持按状态进行筛选
+    @PostMapping("/stuLA")
+    public Result getstuLA(@RequestBody GetLACADto getLACADto){
+        if(getLACADto.getStatus() == appSubmit){
+            return Result.succ(leaveApplicationService.getLAByStuIdAndStatus(getLACADto.getStuId(),appSubmit));
+        }
+        else if(getLACADto.getStatus() == appITApprove){
+            return Result.succ(leaveApplicationService.getLAByStuIdAndStatus(getLACADto.getStuId(),appITApprove));
+        }
+        else if(getLACADto.getStatus() == appDAApprove){
+            return Result.succ(leaveApplicationService.getLAByStuIdAndStatus(getLACADto.getStuId(),appDAApprove));
+        }
+        else if(getLACADto.getStatus() == appReject){
+            return Result.succ(leaveApplicationService.getLAByStuIdAndStatus(getLACADto.getStuId(),appReject));
+        }
+        else{
+            return Result.succ(leaveApplicationService.getLAByStuId(getLACADto.getStuId()));
+        }
+    }
+
+    //过去n天尚未批准的离校申请数量及详细信息
+    @PostMapping("/lastndayUncheck")
+    public Result lastndayUncheck(@RequestParam int days){
+        List<LeaveApplication> leaveApplications = leaveApplicationService.getLastNDayUncheckedLA(days);
+        return Result.succ(leaveApplications.size(),leaveApplications);
     }
 
 }

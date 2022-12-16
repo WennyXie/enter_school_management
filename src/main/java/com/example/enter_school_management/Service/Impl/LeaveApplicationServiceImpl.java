@@ -3,6 +3,8 @@ package com.example.enter_school_management.Service.Impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.enter_school_management.Common.Dto.LeaveApplicationDto;
+import com.example.enter_school_management.Common.lang.Const;
+import com.example.enter_school_management.Entity.HealthDaily;
 import com.example.enter_school_management.Entity.LeaveApplication;
 import com.example.enter_school_management.Mapper.LeaveApplicationMapper;
 import com.example.enter_school_management.Service.LeaveApplicationService;
@@ -10,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import static com.example.enter_school_management.Common.lang.Const.appSubmit;
@@ -59,5 +63,38 @@ public class LeaveApplicationServiceImpl extends ServiceImpl<LeaveApplicationMap
         QueryWrapper<LeaveApplication> leaveApplicationQueryWrapper = new QueryWrapper<>();
         leaveApplicationQueryWrapper.eq("stu_id",stuId);
         return leaveApplicationMapper.selectList(leaveApplicationQueryWrapper);
+    }
+
+    @Override
+    public List<LeaveApplication> getLAByStuIdAndStatus(String stuId, int status){
+        QueryWrapper<LeaveApplication> leaveApplicationQueryWrapper = new QueryWrapper<>();
+        leaveApplicationQueryWrapper.eq("stu_id",stuId).eq("status",status);
+        return leaveApplicationMapper.selectList(leaveApplicationQueryWrapper);
+    }
+
+    @Override
+    public List<LeaveApplication> getLastNDayUncheckedLA(int days){
+        QueryWrapper<LeaveApplication> leaveApplicationQueryWrapper = new QueryWrapper<>();
+        java.util.Date utilDate = new java.util.Date();
+        Date currentDate = new Date(utilDate.getTime());
+        Calendar calendar =new GregorianCalendar();
+        calendar.setTime(utilDate);
+        calendar.add(Calendar.DATE, -days);
+// calendar的time转成java.util.Date格式日期
+        utilDate = (java.util.Date)calendar.getTime();
+//java.util.Date日期转换成转成java.sql.Date格式
+        Date daysBefore =new Date(utilDate.getTime());
+        leaveApplicationQueryWrapper.eq("status", appSubmit).between("current_date",daysBefore,currentDate);
+        return leaveApplicationMapper.selectList(leaveApplicationQueryWrapper);
+    }
+
+    @Override
+    public boolean checkTodayIsLeave(String stuId){
+        long d = System.currentTimeMillis();
+        Date currentDate = new Date(d);
+        QueryWrapper<LeaveApplication> leaveApplicationQueryWrapper = new QueryWrapper<>();
+        LeaveApplication leaveApplication = getOne(leaveApplicationQueryWrapper.eq("status",Const.appDAApprove)
+                                                .orderByDesc("current_date"));
+        return currentDate.after(leaveApplication.getExpLeavdate()) && currentDate.before(leaveApplication.getExpRetdate());
     }
 }

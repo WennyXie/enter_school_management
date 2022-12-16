@@ -40,7 +40,7 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogSe
             return (long) -1;
         log.setCampusId(logDto.getCampusId());
         log.setLogStatus(1-lastLog.getLogStatus());
-        Student student = studentService.getStudentById(logDto.getStuId());
+        Student student = studentService.getById(logDto.getStuId());
         log.setDeptId(stuClassService.getById(student.getStuClassId()).getDeptId());
         long d = System.currentTimeMillis();
         Date currentDate = new Date(d);
