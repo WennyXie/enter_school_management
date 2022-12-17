@@ -17,7 +17,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     @Autowired
     StudentMapper studentMapper;
 
-    @Override
+   // @Override
     public Student getStudentById(String stuId){
         return getOne(new QueryWrapper<Student>().eq("stu_id", stuId));
     }

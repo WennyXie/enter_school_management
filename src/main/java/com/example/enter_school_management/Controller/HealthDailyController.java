@@ -51,7 +51,4 @@ public class HealthDailyController {
         return Result.succ("成功获取过去"+days+"天该生填写健康日报！", records);
     }
 
-
-
-
 }
