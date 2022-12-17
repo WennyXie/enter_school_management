@@ -31,7 +31,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
 
     @Override
     public Long getSchoolIdById(String stuId){
-        Student student = getStudentById(stuId);
+        Student student = getById(stuId);
         return student.getStuSchoolId();
     }
 

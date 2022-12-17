@@ -11,7 +11,7 @@
  Target Server Version : 80028
  File Encoding         : 65001
 
- Date: 16/12/2022 15:19:41
+ Date: 17/12/2022 21:05:41
 */
 
 SET NAMES utf8mb4;
@@ -48,7 +48,7 @@ CREATE TABLE `campus`  (
   `campus_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `campus_status` int(0) NOT NULL,
   PRIMARY KEY (`campus_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of campus
@@ -65,6 +65,7 @@ DROP TABLE IF EXISTS `comin_approve`;
 CREATE TABLE `comin_approve`  (
   `comin_app_id` bigint(0) NOT NULL AUTO_INCREMENT,
   `stu_id` char(11) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `admin_id` char(8) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `comin_reason` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `exp_comindate` date NOT NULL,
   `status` int(0) NOT NULL,
@@ -72,12 +73,12 @@ CREATE TABLE `comin_approve`  (
   `reject_reason` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `current_date` date NOT NULL,
   PRIMARY KEY (`comin_app_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of comin_approve
 -- ----------------------------
-INSERT INTO `comin_approve` VALUES (1, '20302010061', '回学校', '2022-12-02', 1, NULL, NULL, '2022-12-02');
+INSERT INTO `comin_approve` VALUES (1, '20302010061', '12345678', '回学校', '2022-12-02', 1, NULL, NULL, '2022-12-02');
 
 -- ----------------------------
 -- Table structure for department
@@ -145,6 +146,7 @@ DROP TABLE IF EXISTS `leave_application`;
 CREATE TABLE `leave_application`  (
   `leav_app_id` bigint(0) NOT NULL AUTO_INCREMENT,
   `stu_id` char(11) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `admin_id` char(8) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `leav_reason` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `dest_city` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `dest_district` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -156,12 +158,12 @@ CREATE TABLE `leave_application`  (
   `reject_reason` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `current_date` date NOT NULL,
   PRIMARY KEY (`leav_app_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of leave_application
 -- ----------------------------
-INSERT INTO `leave_application` VALUES (1, '20302010061', '回家', '上海', '杨浦', '长海路街道', '2022-12-01', '2022-12-02', 1, NULL, NULL, '2022-12-02');
+INSERT INTO `leave_application` VALUES (1, '20302010061', '12345678', '回家', '上海', '杨浦', '长海路街道', '2022-12-01', '2022-12-02', 1, NULL, NULL, '2022-12-02');
 
 -- ----------------------------
 -- Table structure for log
@@ -176,7 +178,7 @@ CREATE TABLE `log`  (
   `campus_id` bigint(0) NOT NULL,
   `dept_id` bigint(0) NOT NULL,
   PRIMARY KEY (`log_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of log
@@ -200,7 +202,7 @@ CREATE TABLE `outside_time`  (
   `date` date NOT NULL,
   `ot_time` mediumtext CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   PRIMARY KEY (`ot_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1600742829727182855 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1600742829727182854 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of outside_time
@@ -255,7 +257,7 @@ CREATE TABLE `school`  (
   `school_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `school_city` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   PRIMARY KEY (`school_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of school
@@ -292,6 +294,7 @@ CREATE TABLE `student`  (
   `stu_idtype` int(0) NOT NULL,
   `stu_idnum` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `stu_class_id` bigint(0) NOT NULL,
+  `stu_depart_id` bigint(0) NOT NULL,
   `stu_school_id` bigint(0) NOT NULL,
   `hd_updated` int(0) NOT NULL,
   PRIMARY KEY (`stu_id`) USING BTREE
@@ -300,6 +303,6 @@ CREATE TABLE `student`  (
 -- ----------------------------
 -- Records of student
 -- ----------------------------
-INSERT INTO `student` VALUES ('20302010061', '谢子璇', '13818485220', 'xzx@gmail.com', 1, '881157829348593', 1, 1, 0);
+INSERT INTO `student` VALUES ('20302010061', '谢子璇', '13818485220', 'xzx@gmail.com', 1, '881157829348593', 1, 1, 1, 0);
 
 SET FOREIGN_KEY_CHECKS = 1;

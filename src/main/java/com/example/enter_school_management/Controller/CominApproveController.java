@@ -29,6 +29,10 @@ public class CominApproveController {
     PermissionService permissionService;
     @Autowired
     CampusService campusService;
+    @Autowired
+    StuClassService stuClassService;
+    @Autowired
+    DepartmentService departmentService;
 
     //学生填写返校申请
     @PostMapping("/fillin")
@@ -40,20 +44,9 @@ public class CominApproveController {
     //管理员获取所有职权范围内的返校申请
     @PostMapping("/getAllDuty")
     public Result getAllDutyCA(@RequestParam String adminId){
-        Admin currentAdmin = adminService.getById(adminId);
-        if(currentAdmin.getAdminType() == roleInstructor) {
-            List<CominApprove> cominApproves = cominApproveService.getCAByStatus(appSubmit);
-            return Result.succ("辅导员返校申请审核列表获取成功！",cominApproves);
-        }
-        else if(currentAdmin.getAdminType() == roleDeptAdmin){
-            List<CominApprove> cominApproves = cominApproveService.getCAByStatus(appITApprove);
-            return Result.succ("院系管理员返校申请审核列表获取成功！",cominApproves);
-        }
-        else if(currentAdmin.getAdminType() == roleSuperAdmin){
-            List<CominApprove> cominApproves = cominApproveService.getAllCA();
-            return Result.succ("超级管理员返校申请列表获取成功！",cominApproves);
-        }
-        return Result.fail("未找到对应管理员！");
+        List<CominApprove> cominApproves = cominApproveService.getCAByDuty(adminId);
+        if (cominApproves.size() == 0) return Result.fail("目前没有未处理的申请或未找到对应管理员！");
+        else return Result.succ("返校申请审核列表获取成功！",cominApproves);
     }
 
     //检查返回的7日健康日报是否有异常
@@ -89,6 +82,7 @@ public class CominApproveController {
         if(currentAdmin.getAdminType() == roleInstructor) {
             CA.setStatus(appITApprove);
             cominApproveService.updateById(CA);
+            CA.setAdminId(departmentService.getById(stuClassService.getClassByAdmin(adminID).getDeptId()).getDeptAdminId());
             return Result.succ("辅导员审批通过成功！");
         }
         else if(currentAdmin.getAdminType() == roleDeptAdmin){

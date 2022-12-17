@@ -23,6 +23,8 @@ public class Student {
     private String stuIdnum;
     @NotBlank(message = "学生所在班级不能为空")
     private Long stuClassId;
+    @NotBlank(message = "学生所在院系不能为空")
+    private Long stuDepartId;
     @NotBlank(message = "学生所在学校不能为空")
     private Long stuSchoolId;
     @NotBlank(message = "健康日报填写状态不能为空")

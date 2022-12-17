@@ -4,24 +4,30 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.enter_school_management.Common.Dto.LeaveApplicationDto;
 import com.example.enter_school_management.Common.lang.Const;
+import com.example.enter_school_management.Common.lang.Result;
+import com.example.enter_school_management.Entity.Admin;
 import com.example.enter_school_management.Entity.HealthDaily;
 import com.example.enter_school_management.Entity.LeaveApplication;
+import com.example.enter_school_management.Mapper.AdminMapper;
 import com.example.enter_school_management.Mapper.LeaveApplicationMapper;
 import com.example.enter_school_management.Service.LeaveApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import static com.example.enter_school_management.Common.lang.Const.appSubmit;
+import static com.example.enter_school_management.Common.lang.Const.*;
 
 @Service
 public class LeaveApplicationServiceImpl extends ServiceImpl<LeaveApplicationMapper, LeaveApplication> implements LeaveApplicationService {
     @Autowired
     LeaveApplicationMapper leaveApplicationMapper;
+    @Autowired
+    AdminMapper adminMapper;
 
     @Override
     public Long saveLA(LeaveApplicationDto leaveApplicationDto){
@@ -96,5 +102,23 @@ public class LeaveApplicationServiceImpl extends ServiceImpl<LeaveApplicationMap
         LeaveApplication leaveApplication = getOne(leaveApplicationQueryWrapper.eq("status",Const.appDAApprove)
                                                 .orderByDesc("current_date"));
         return currentDate.after(leaveApplication.getExpLeavdate()) && currentDate.before(leaveApplication.getExpRetdate());
+    }
+
+    @Override
+    public List<LeaveApplication> getLAByDuty(String adminId){
+        Admin currentAdmin = adminMapper.selectById(adminId);
+        QueryWrapper<LeaveApplication> leaveApplicationQueryWrapper = new QueryWrapper<>();
+        if(currentAdmin.getAdminType() == roleInstructor) {
+            leaveApplicationQueryWrapper.eq("admin_id", adminId).eq("status", appSubmit);
+            return leaveApplicationMapper.selectList(leaveApplicationQueryWrapper);
+        }
+        else if(currentAdmin.getAdminType() == roleDeptAdmin){
+            leaveApplicationQueryWrapper.eq("admin_id", adminId).eq("status", appITApprove);
+            return leaveApplicationMapper.selectList(leaveApplicationQueryWrapper);
+        }
+        else if(currentAdmin.getAdminType() == roleSuperAdmin){
+            return getAllLA();
+        }
+        else return new ArrayList<LeaveApplication>();
     }
 }

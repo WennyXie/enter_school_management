@@ -9,6 +9,8 @@ import java.sql.Date;
 public class LeaveApplicationDto {
     @NotBlank(message = "学号不能为空")
     private String stuId;
+    @NotBlank(message = "负责辅导员不能为空")
+    private String adminId;
     @NotBlank(message = "离校原因不能为空")
     private String leavReason;
     @NotBlank(message = "目的地城市不能为空")

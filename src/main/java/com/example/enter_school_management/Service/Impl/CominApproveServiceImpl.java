@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.enter_school_management.Common.Dto.CominApproveDto;
 import com.example.enter_school_management.Common.lang.Result;
+import com.example.enter_school_management.Entity.Admin;
 import com.example.enter_school_management.Entity.CominApprove;
 import com.example.enter_school_management.Entity.LeaveApplication;
+import com.example.enter_school_management.Mapper.AdminMapper;
 import com.example.enter_school_management.Mapper.CominApproveMapper;
 import com.example.enter_school_management.Service.CominApproveService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,16 +16,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import static com.example.enter_school_management.Common.lang.Const.appSubmit;
+import static com.example.enter_school_management.Common.lang.Const.*;
 
 @Service
 public class CominApproveServiceImpl extends ServiceImpl<CominApproveMapper, CominApprove> implements CominApproveService {
     @Autowired
     CominApproveMapper cominApproveMapper;
+    @Autowired
+    AdminMapper adminMapper;
 
     @Override
     public Long saveCA(CominApproveDto cominApproveDto){
@@ -84,6 +89,24 @@ public class CominApproveServiceImpl extends ServiceImpl<CominApproveMapper, Com
         Date daysBefore =new Date(utilDate.getTime());
         cominApproveQueryWrapper.eq("status", appSubmit).between("current_date",daysBefore,currentDate);
         return cominApproveMapper.selectList(cominApproveQueryWrapper);
+    }
+
+    @Override
+    public List<CominApprove> getCAByDuty(String adminId){
+        Admin currentAdmin = adminMapper.selectById(adminId);
+        QueryWrapper<CominApprove> cominApproveQueryWrapper = new QueryWrapper<>();
+        if(currentAdmin.getAdminType() == roleInstructor) {
+            cominApproveQueryWrapper.eq("admin_id", adminId).eq("status", appSubmit);
+            return cominApproveMapper.selectList(cominApproveQueryWrapper);
+        }
+        else if(currentAdmin.getAdminType() == roleDeptAdmin){
+            cominApproveQueryWrapper.eq("admin_id", adminId).eq("status", appITApprove);
+            return cominApproveMapper.selectList(cominApproveQueryWrapper);
+        }
+        else if(currentAdmin.getAdminType() == roleSuperAdmin){
+            return getAllCA();
+        }
+        else return new ArrayList<CominApprove>();
     }
 
 }

@@ -7,9 +7,7 @@ import com.example.enter_school_management.Common.lang.Result;
 import com.example.enter_school_management.Entity.Admin;
 import com.example.enter_school_management.Entity.LeaveApplication;
 import com.example.enter_school_management.Entity.RiskyPlaces;
-import com.example.enter_school_management.Service.AdminService;
-import com.example.enter_school_management.Service.LeaveApplicationService;
-import com.example.enter_school_management.Service.RiskyPlacesService;
+import com.example.enter_school_management.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +28,10 @@ public class LeaveApplicationController {
     AdminService adminService;
     @Autowired
     RiskyPlacesService riskyPlacesService;
+    @Autowired
+    StuClassService stuClassService;
+    @Autowired
+    DepartmentService departmentService;
 
     //学生填写离校申请
     @PostMapping("/fillin")
@@ -41,20 +43,9 @@ public class LeaveApplicationController {
     //管理员获取所有职权范围内的离校申请
     @PostMapping("/getAllDuty")
     public Result getAllDutyLA(@RequestParam String adminId){
-        Admin currentAdmin = adminService.getById(adminId);
-        if(currentAdmin.getAdminType() == roleInstructor) {
-            List<LeaveApplication> leaveApplications = leaveApplicationService.getLAByStatus(appSubmit);
-            return Result.succ("辅导员离校申请审核列表获取成功！",leaveApplications);
-        }
-        else if(currentAdmin.getAdminType() == roleDeptAdmin){
-            List<LeaveApplication> leaveApplications = leaveApplicationService.getLAByStatus(appITApprove);
-            return Result.succ("院系管理员离校申请审核列表获取成功！",leaveApplications);
-        }
-        else if(currentAdmin.getAdminType() == roleSuperAdmin){
-            List<LeaveApplication> leaveApplications = leaveApplicationService.getAllLA();
-            return Result.succ("超级管理员离校申请列表获取成功！",leaveApplications);
-        }
-        return Result.fail("未找到对应管理员！");
+        List<LeaveApplication> leaveApplications = leaveApplicationService.getLAByDuty(adminId);
+        if (leaveApplications.size() == 0) return Result.fail("目前没有未处理的申请或未找到对应管理员！");
+        else return Result.succ("离校申请审核列表获取成功！",leaveApplications);
     }
 
     //检查学生要去的地区是否为风险地区
@@ -90,6 +81,7 @@ public class LeaveApplicationController {
         LA.setCurrentAdminId(adminID);
         if(currentAdmin.getAdminType() == roleInstructor) {
             LA.setStatus(appITApprove);
+            LA.setAdminId(departmentService.getById(stuClassService.getClassByAdmin(adminID).getDeptId()).getDeptAdminId());
             leaveApplicationService.updateById(LA);
             return Result.succ("辅导员审批通过成功！");
         }

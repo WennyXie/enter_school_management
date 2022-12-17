@@ -4,4 +4,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.enter_school_management.Entity.StuClass;
 
 public interface StuClassService extends IService<StuClass> {
+    StuClass getClassByAdmin(String adminId);
 }
