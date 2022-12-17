@@ -41,4 +41,18 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         studentQueryWrapper.eq("hd_updated", hdStatus);
         return studentMapper.selectList(studentQueryWrapper);
     }
+
+    @Override
+    public List<Student> getByClass(Long classId){
+        QueryWrapper<Student> studentQueryWrapper = new QueryWrapper<>();
+        studentQueryWrapper.eq("stu_class_id", classId);
+        return studentMapper.selectList(studentQueryWrapper);
+    }
+
+    @Override
+    public List<Student> getByDepart(Long departId){
+        QueryWrapper<Student> studentQueryWrapper = new QueryWrapper<>();
+        studentQueryWrapper.eq("stu_depart_id", departId);
+        return studentMapper.selectList(studentQueryWrapper);
+    }
 }
