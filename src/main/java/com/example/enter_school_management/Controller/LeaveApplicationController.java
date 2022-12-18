@@ -94,7 +94,7 @@ public class LeaveApplicationController {
     }
 
     //获取学生的所有离校申请
-    @PostMapping("/myLA")
+    @GetMapping("/myLA")
     public Result getMyLA(@RequestParam String stuId){
         List<LeaveApplication> leaveApplications = leaveApplicationService.getLAByStuId(stuId);
         return Result.succ("获取出校申请列表成功！",leaveApplications);

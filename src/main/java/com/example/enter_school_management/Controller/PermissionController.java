@@ -22,7 +22,7 @@ public class PermissionController {
     }
 
     //查询学生的入校权限
-    @PostMapping("/getperm")
+    @GetMapping("/getperm")
     public Result getPerm(@RequestParam String stuId){
         List<Permission> permissions = permissionService.getPermissionByStuid(stuId);
         return Result.succ(permissions);

@@ -18,4 +18,5 @@ public class StuClassServiceImpl extends ServiceImpl<StuClassMapper, StuClass> i
         QueryWrapper<StuClass> stuClassQueryWrapper = new QueryWrapper<>();
         return getOne(stuClassQueryWrapper.eq("instructor_id",adminId));
     }
+
 }

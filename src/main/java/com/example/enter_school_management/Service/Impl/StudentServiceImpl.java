@@ -17,7 +17,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     @Autowired
     StudentMapper studentMapper;
 
-   // @Override
+    @Override
     public Student getStudentById(String stuId){
         return getOne(new QueryWrapper<Student>().eq("stu_id", stuId));
     }
@@ -54,5 +54,10 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         QueryWrapper<Student> studentQueryWrapper = new QueryWrapper<>();
         studentQueryWrapper.eq("stu_depart_id", departId);
         return studentMapper.selectList(studentQueryWrapper);
+    }
+
+    @Override
+    public void update(Student student){
+        studentMapper.updateById(student);
     }
 }

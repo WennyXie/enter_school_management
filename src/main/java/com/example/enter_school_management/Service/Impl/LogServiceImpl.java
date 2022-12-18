@@ -36,7 +36,7 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogSe
         log.setStuId(logDto.getStuId());
         Log lastLog = getLatestLog(logDto.getStuId());
         int lastStatus = lastLog.getLogStatus();
-        if(lastStatus == inSchool && !Objects.equals(logDto.getCampusId(), lastLog.getLogId()))
+        if(lastStatus == inSchool && !Objects.equals(logDto.getCampusId(), lastLog.getCampusId()))
             return (long) -1;
         log.setCampusId(logDto.getCampusId());
         log.setLogStatus(1-lastLog.getLogStatus());

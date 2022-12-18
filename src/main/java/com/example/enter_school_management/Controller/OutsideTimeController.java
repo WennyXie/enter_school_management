@@ -23,7 +23,7 @@ public class OutsideTimeController {
     }
 
     //查询学生从当天算起过去一年的离校总时长
-    @PostMapping("/getLastYearTotalOT")
+    @GetMapping("/getLastYearTotalOT")
     public Result getLastYearTotalOT(@RequestParam String stuId){
         List<OutsideTime> outsideTimes = outsideTimeService.getLastnDayOutsideTime(stuId, Const.oneYear);
         Long totalOT = 0L;

@@ -101,7 +101,7 @@ public class CominApproveController {
     }
 
     //学生查询自己所有的返校申请
-    @PostMapping("/myCA")
+    @GetMapping("/myCA")
     public Result getMyLA(@RequestParam String stuId){
         List<CominApprove> cominApproves = cominApproveService.getCAByStuId(stuId);
         return Result.succ("获取返校申请列表成功！",cominApproves);

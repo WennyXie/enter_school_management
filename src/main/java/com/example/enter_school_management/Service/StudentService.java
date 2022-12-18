@@ -1,5 +1,6 @@
 package com.example.enter_school_management.Service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.enter_school_management.Entity.Student;
 
@@ -11,4 +12,7 @@ public interface StudentService extends IService<Student> {
     List<Student> getStudentByHDStatus(int hdStatus);//根据健康日报是否填写的情况获取学生
     List<Student> getByClass(Long classId);
     List<Student> getByDepart(Long departId);
+    Student getStudentById(String stuId);
+
+    void update(Student student);
 }
