@@ -1,0 +1,151 @@
+.home-text {
+    margin:200px;
+    justify-content:center;
+    align-items:center;
+    font-size: 25pt;
+    font-weight: 600;
+}
+
+.container {
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+button {
+    background-color: rgb(136, 204, 252); 
+    color:darkslategrey;
+    font-size: 13pt;
+    font-weight: 600;
+    width: 80px;
+    height: 40px;
+    border: 1px solid rgb(192, 200, 204);
+    border-radius: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: 150px;
+    margin-right: 150px;
+}
+b2 {
+    justify-content: flex-end;
+}
+
+button:hover{
+    background-color: #b7d1fa;
+    cursor: pointer;
+    color: rgb(91, 99, 106);
+}
+
+.table_button {
+    width: 75px;
+    height: 30px;
+    margin-top:0;
+    margin-left:3px;
+    margin-right:3px;
+    margin-bottom:0;
+    background-color:c; 
+    font-size: 10pt;
+}
+.table_button:hover {
+    background-color: #c6dafa;
+    cursor: pointer;
+}
+
+.cancel {
+    color: rgb(63, 200, 48);
+    background-color:rgb(226, 241, 225);
+}
+.cancel:hover {
+    background-color:rgb(226, 241, 225);
+}
+.confirm {
+    color: rgba(50, 173, 231);
+    background-color:rgb(235, 244, 249);
+}
+.confirm:hover {
+    background-color:rgb(235, 244, 249);
+}
+
+.edit {
+    color: rgb(44, 198, 225); 
+    background-color:rgb(233, 249, 252);
+}
+.edit:hover {
+    background-color:rgb(233, 249, 252);
+}
+.delete {
+    color: rgb(253, 83, 36); 
+    background-color:rgb(250, 241, 240);
+}
+.delete:hover {
+    background-color: rgb(250, 241, 240);
+}
+
+.collapse-item {
+    color:cadetblue;
+}
+
+input {
+    border: none;
+    background-color:rgb(233, 238, 244);
+    opacity: 0.8;
+    height: 30px;
+    border-radius: 3px;
+}
+
+.form-group {
+    display: flex;
+    padding: 10px;
+    margin-right: 60px;
+}
+.input {
+    margin: auto;
+    color:rgb(83, 128, 156);
+    font-size: 11pt;
+    font-weight: 500;
+    display: flex;
+    width: 250px;
+    float: left;
+}
+.input-label {
+    width: 80px;
+    line-height: 30px;
+    text-align: right;
+    padding-right: 5px;
+}
+
+.icon {
+    width: 20px;
+    position: absolute;
+    left: 6px;
+}
+
+.header {
+    float: left;
+    width: 64px;
+    height:30px;
+}
+
+.wuliao_class {
+    border: 2px solid #ccc;
+}
+
+
+.header-new-drop li {
+    width: 120px;
+    font-size: 10pt;
+    background-color:#E9EEF4;
+    text-align: center;
+    padding: 2px;
+    line-height: 30px;
+}
+
+.el-select-dropdown {
+    max-width: 150px;
+    min-width: 80px;
+    background-color:#E9EEF4;
+
+}
+
