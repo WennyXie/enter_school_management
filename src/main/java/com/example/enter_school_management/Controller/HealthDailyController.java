@@ -76,4 +76,7 @@ public class HealthDailyController {
         }
         return Result.succ("成功获取过去"+days+"天该院所有学生填写的健康日报！", deptHD);
     }
+
+    //获取连续n天健康日报时间完全一致的学生数量、个人信息
+
 }

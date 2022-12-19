@@ -8,6 +8,8 @@ import com.example.enter_school_management.Service.StuClassService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class StuClassServiceImpl extends ServiceImpl<StuClassMapper, StuClass> implements StuClassService {
     @Autowired
@@ -17,6 +19,13 @@ public class StuClassServiceImpl extends ServiceImpl<StuClassMapper, StuClass> i
     public StuClass getClassByAdmin(String adminId){
         QueryWrapper<StuClass> stuClassQueryWrapper = new QueryWrapper<>();
         return getOne(stuClassQueryWrapper.eq("instructor_id",adminId));
+    }
+
+    @Override
+    public List<StuClass> getClassByDept(Long deptId){
+        QueryWrapper<StuClass> stuClassQueryWrapper = new QueryWrapper<>();
+        stuClassQueryWrapper.eq("dept_id",deptId);
+        return stuClassMapper.selectList(stuClassQueryWrapper);
     }
 
 }

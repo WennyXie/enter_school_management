@@ -9,6 +9,7 @@ import com.example.enter_school_management.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -33,6 +34,8 @@ public class CominApproveController {
     StuClassService stuClassService;
     @Autowired
     DepartmentService departmentService;
+    @Autowired
+    StudentService studentService;
 
     //学生填写返校申请
     @PostMapping("/fillin")
@@ -107,23 +110,56 @@ public class CominApproveController {
         return Result.succ("获取返校申请列表成功！",cominApproves);
     }
 
-    //查询学生的返校申请，支持按状态进行筛选
+    //学生自己查询学生的返校申请，支持按状态进行筛选，注意status如果不传值的话过来默认为0，所以请传值4来获取所有的LA，下同
     @PostMapping("/stuCA")
     public Result getstuCA(@RequestBody GetLACADto getLACADto){
-        if(getLACADto.getStatus() == appSubmit){
-            return Result.succ(cominApproveService.getCAByStuIdAndStatus(getLACADto.getStuId(),appSubmit));
-        }
-        else if(getLACADto.getStatus() == appITApprove){
-            return Result.succ(cominApproveService.getCAByStuIdAndStatus(getLACADto.getStuId(),appITApprove));
-        }
-        else if(getLACADto.getStatus() == appDAApprove){
-            return Result.succ(cominApproveService.getCAByStuIdAndStatus(getLACADto.getStuId(),appDAApprove));
-        }
-        else if(getLACADto.getStatus() == appReject){
-            return Result.succ(cominApproveService.getCAByStuIdAndStatus(getLACADto.getStuId(),appReject));
+        int status = getLACADto.getStatus();
+        if(status != appSubmit && status != appITApprove && status != appDAApprove && status != appReject)
+            return Result.succ(cominApproveService.getCAByStuId(getLACADto.getId()));
+        return Result.succ(cominApproveService.getCAByStuIdAndStatus(getLACADto.getId(),status));
+    }
+
+    //辅导员查询该班学生的返校申请，支持按状态进行筛选
+    @PostMapping("/instr/stuCA")
+    public Result instrGetStuCA(@RequestBody GetLACADto getLACADto){
+        List<Student> studentList = studentService.getByClass(stuClassService.getClassByAdmin(getLACADto.getId()).getClassId());
+        List<CominApprove> classCA = new ArrayList<>();
+        int status = getLACADto.getStatus();
+        if(status != appSubmit && status != appITApprove && status != appDAApprove && status != appReject) {
+            for(Student s: studentList){
+                List<CominApprove> cominApproves = cominApproveService.getCAByStuId(s.getStuId());
+                classCA.addAll(cominApproves);
+            }
+            return Result.succ(classCA);
         }
         else{
-            return Result.succ(cominApproveService.getCAByStuId(getLACADto.getStuId()));
+            for(Student s: studentList){
+                List<CominApprove> cominApproves = cominApproveService.getCAByStuIdAndStatus(s.getStuId(),status);
+                classCA.addAll(cominApproves);
+            }
+            return Result.succ(classCA);
+        }
+    }
+
+    //院系管理员查询该院学生的返校申请，支持按状态进行筛选
+    @PostMapping("/DA/stuCA")
+    public Result DAGetStuCA(@RequestBody GetLACADto getLACADto){
+        List<Student> studentList = studentService.getByDepart(departmentService.getDepartByAdmin(getLACADto.getId()).getDeptId());
+        List<CominApprove> deptCA = new ArrayList<>();
+        int status = getLACADto.getStatus();
+        if(status != appSubmit && status != appITApprove && status != appDAApprove && status != appReject) {
+            for(Student s: studentList){
+                List<CominApprove> cominApproves = cominApproveService.getCAByStuId(s.getStuId());
+                deptCA.addAll(cominApproves);
+            }
+            return Result.succ(deptCA);
+        }
+        else{
+            for(Student s: studentList){
+                List<CominApprove> cominApproves = cominApproveService.getCAByStuIdAndStatus(s.getStuId(),status);
+                deptCA.addAll(cominApproves);
+            }
+            return Result.succ(deptCA);
         }
     }
 

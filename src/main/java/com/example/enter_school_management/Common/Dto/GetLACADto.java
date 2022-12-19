@@ -6,7 +6,7 @@ import javax.validation.constraints.NotBlank;
 
 @Data
 public class GetLACADto {
-    @NotBlank(message = "学生id不能为空")
-    private String stuId;
+    @NotBlank(message = "id不能为空")
+    private String id;
     private int status;
 }
