@@ -90,13 +90,27 @@ public class HealthDailyServiceImpl extends ServiceImpl<HealthDailyMapper, Healt
         healthDaily.setDistrict(healthDailyDto.getDistrict());
         healthDaily.setStreet(healthDailyDto.getStreet());
         healthDaily.setHdStatus(null);
-        long d = System.currentTimeMillis();
+        java.util.Date now = new java.util.Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(now);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        long d = cal.getTimeInMillis();
         Date currentDate = new Date(d);
         Time currentTime = new Time(d);
         healthDaily.setDate(currentDate);
         healthDaily.setTime(currentTime);
         health_dailyMapper.insert(healthDaily);
         return healthDaily.getHdId();
+    }
+
+    @Override
+    public List<HealthDaily> getDuplicateTime(String stuId){
+        QueryWrapper<HealthDaily> healthDailyQueryWrapper = new QueryWrapper<>();
+        healthDailyQueryWrapper.eq("stu_id",stuId).select("stu_id", "date", "time")
+                .inSql("time","select time from health_daily group by time having count(time) > 1")
+                .orderByAsc("date");
+        return health_dailyMapper.selectList(healthDailyQueryWrapper);
     }
 
 

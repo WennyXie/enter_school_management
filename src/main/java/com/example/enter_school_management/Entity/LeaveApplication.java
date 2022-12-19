@@ -28,9 +28,9 @@ public class LeaveApplication {
     @NotBlank(message = "预计返校日期不能为空")
     private Date expRetdate;
     @NotBlank(message = "申请状态不能为空")
-    private int status;
+    private Integer status;
     private String currentAdminId;
     private String rejectReason;
     @NotBlank(message = "申请日期不能为空")
-    private Date currentDate;
+    private Date date;
 }

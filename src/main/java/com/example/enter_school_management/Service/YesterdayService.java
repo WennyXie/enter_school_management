@@ -17,4 +17,13 @@ public class YesterdayService {
         Date yesterday =new Date(utilDate.getTime());
         return yesterday;
     }
+
+    public boolean isYesterday(Date today, Date yesterday){
+        Calendar calendar =new GregorianCalendar();
+        calendar.setTime(today);
+        calendar.add(Calendar.DATE, -1);
+        java.util.Date utilDate = (java.util.Date)calendar.getTime();
+        Date trueYesterday = new Date(utilDate.getTime());
+        return trueYesterday.equals(yesterday);
+    }
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.sql.Date;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -40,9 +41,10 @@ public class CominApproveServiceImpl extends ServiceImpl<CominApproveMapper, Com
         cominApprove.setCurrentAdminId(null);
         cominApprove.setRejectReason(null);
         cominApprove.setStatus(appSubmit);
+        cominApprove.setAdminId(cominApproveDto.getAdminId());
         long d = System.currentTimeMillis();
-        Date currentDate = new Date(d);
-        cominApprove.setCurrentDate(currentDate);
+        java.sql.Date currentDate = new java.sql.Date(d);
+        cominApprove.setDate(currentDate);
         cominApproveMapper.insert(cominApprove);
         return cominApprove.getCominAppId();
     }

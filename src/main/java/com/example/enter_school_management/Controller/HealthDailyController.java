@@ -9,7 +9,9 @@ import com.example.enter_school_management.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static com.example.enter_school_management.Common.lang.Const.HDUpdated;
@@ -29,6 +31,8 @@ public class HealthDailyController {
     StuClassService stuClassService;
     @Autowired
     DepartmentService departmentService;
+    @Autowired
+    YesterdayService yesterdayService;
 
     //学生填写健康日报
     @PostMapping ("/fillin")
@@ -78,5 +82,39 @@ public class HealthDailyController {
     }
 
     //获取连续n天健康日报时间完全一致的学生数量、个人信息
-
+    @PostMapping("/SA/nDaysame")
+    public Result nDaySame(@RequestParam int days){
+        List<Student> studentList = studentService.getAllStudent();
+        List<Student> badStudents = new ArrayList<>();
+        int sameDays = 1;
+        Time dupTime = new Time(0);
+        Time timeNow = new Time(0);
+        java.sql.Date yesterday = new java.sql.Date(0);
+        java.sql.Date dateNow = new java.sql.Date(0);;
+        for(Student student : studentList){
+            List<HealthDaily> healthDailies = health_dailyService.getDuplicateTime(student.getStuId());
+            sameDays = 1;
+            for(int i = 0; i < healthDailies.size();i++){
+                dateNow = healthDailies.get(i).getDate();
+                timeNow = healthDailies.get(i).getTime();
+                if(i == 0){
+                    dupTime = timeNow;
+                    yesterday = dateNow;
+                }
+                if(yesterdayService.isYesterday(dateNow,yesterday) && timeNow.equals(dupTime)){
+                    sameDays++;
+                    if(sameDays == days){
+                        badStudents.add(student);
+                        break;
+                    }
+                }
+                else{
+                    sameDays = 1;
+                    dupTime = timeNow;
+                }
+                yesterday = dateNow;
+            }
+        }
+        return Result.succ(badStudents.size(),badStudents);
+    }
 }

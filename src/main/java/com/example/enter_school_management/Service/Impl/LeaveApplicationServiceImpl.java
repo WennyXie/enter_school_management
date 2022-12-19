@@ -34,6 +34,7 @@ public class LeaveApplicationServiceImpl extends ServiceImpl<LeaveApplicationMap
         LeaveApplication leaveApplication = new LeaveApplication();
         leaveApplication.setLeavAppId(null);
         leaveApplication.setStuId(leaveApplicationDto.getStuId());
+        leaveApplication.setAdminId(leaveApplicationDto.getAdminId());
         leaveApplication.setLeavReason(leaveApplicationDto.getLeavReason());
         leaveApplication.setDestCity(leaveApplicationDto.getDestCity());
         leaveApplication.setDestDistrict(leaveApplicationDto.getDestDistrict());
@@ -45,7 +46,7 @@ public class LeaveApplicationServiceImpl extends ServiceImpl<LeaveApplicationMap
         leaveApplication.setRejectReason(null);
         long d = System.currentTimeMillis();
         Date currentDate = new Date(d);
-        leaveApplication.setCurrentDate(currentDate);
+        leaveApplication.setDate(currentDate);
         leaveApplicationMapper.insert(leaveApplication);
         return  leaveApplication.getLeavAppId();
     }
