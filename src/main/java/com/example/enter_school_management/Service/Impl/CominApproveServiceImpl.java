@@ -40,11 +40,12 @@ public class CominApproveServiceImpl extends ServiceImpl<CominApproveMapper, Com
         cominApprove.setExpComindate(cominApproveDto.getExpComindate());
         cominApprove.setCurrentAdminId(null);
         cominApprove.setRejectReason(null);
-        cominApprove.setStatus(appSubmit);
+        cominApprove.setAppStatus(appSubmit);
         cominApprove.setAdminId(cominApproveDto.getAdminId());
         long d = System.currentTimeMillis();
         java.sql.Date currentDate = new java.sql.Date(d);
-        cominApprove.setDate(currentDate);
+        cominApprove.setMyDate(currentDate);
+        System.out.println(cominApprove);
         cominApproveMapper.insert(cominApprove);
         return cominApprove.getCominAppId();
     }
@@ -52,7 +53,7 @@ public class CominApproveServiceImpl extends ServiceImpl<CominApproveMapper, Com
     @Override
     public List<CominApprove> getCAByStatus(int status){
         QueryWrapper<CominApprove> cominApproveQueryWrapper = new QueryWrapper<>();
-        cominApproveQueryWrapper.eq("status",status);
+        cominApproveQueryWrapper.eq("app_status",status);
         return cominApproveMapper.selectList(cominApproveQueryWrapper);
     }
 
@@ -73,7 +74,7 @@ public class CominApproveServiceImpl extends ServiceImpl<CominApproveMapper, Com
     @Override
     public List<CominApprove> getCAByStuIdAndStatus(String stuId, int status){
         QueryWrapper<CominApprove> cominApproveQueryWrapper = new QueryWrapper<>();
-        cominApproveQueryWrapper.eq("stu_id",stuId).eq("status",status);
+        cominApproveQueryWrapper.eq("stu_id",stuId).eq("app_status",status);
         return cominApproveMapper.selectList(cominApproveQueryWrapper);
     }
 
@@ -89,7 +90,7 @@ public class CominApproveServiceImpl extends ServiceImpl<CominApproveMapper, Com
         utilDate = (java.util.Date)calendar.getTime();
 //java.util.Date日期转换成转成java.sql.Date格式
         Date daysBefore =new Date(utilDate.getTime());
-        cominApproveQueryWrapper.eq("status", appSubmit).between("current_date",daysBefore,currentDate);
+        cominApproveQueryWrapper.eq("app_status", appSubmit).between("my_date",daysBefore,currentDate);
         return cominApproveMapper.selectList(cominApproveQueryWrapper);
     }
 
@@ -98,11 +99,11 @@ public class CominApproveServiceImpl extends ServiceImpl<CominApproveMapper, Com
         Admin currentAdmin = adminMapper.selectById(adminId);
         QueryWrapper<CominApprove> cominApproveQueryWrapper = new QueryWrapper<>();
         if(currentAdmin.getAdminType() == roleInstructor) {
-            cominApproveQueryWrapper.eq("admin_id", adminId).eq("status", appSubmit);
+            cominApproveQueryWrapper.eq("admin_id", adminId).eq("app_status", appSubmit);
             return cominApproveMapper.selectList(cominApproveQueryWrapper);
         }
         else if(currentAdmin.getAdminType() == roleDeptAdmin){
-            cominApproveQueryWrapper.eq("admin_id", adminId).eq("status", appITApprove);
+            cominApproveQueryWrapper.eq("admin_id", adminId).eq("app_status", appITApprove);
             return cominApproveMapper.selectList(cominApproveQueryWrapper);
         }
         else if(currentAdmin.getAdminType() == roleSuperAdmin){

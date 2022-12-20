@@ -40,13 +40,14 @@ public class LeaveApplicationServiceImpl extends ServiceImpl<LeaveApplicationMap
         leaveApplication.setDestDistrict(leaveApplicationDto.getDestDistrict());
         leaveApplication.setDestStreet(leaveApplicationDto.getDestStreet());
         leaveApplication.setExpLeavdate(leaveApplicationDto.getExpLeavdate());
-        leaveApplication.setExpRetdate(leaveApplication.getExpRetdate());
-        leaveApplication.setStatus(appSubmit);
+        leaveApplication.setExpRetdate(leaveApplicationDto.getExpRetdate());
+        leaveApplication.setAppStatus(appSubmit);
         leaveApplication.setCurrentAdminId(null);
         leaveApplication.setRejectReason(null);
         long d = System.currentTimeMillis();
         Date currentDate = new Date(d);
-        leaveApplication.setDate(currentDate);
+        leaveApplication.setMyDate(currentDate);
+        System.out.println(leaveApplication);
         leaveApplicationMapper.insert(leaveApplication);
         return  leaveApplication.getLeavAppId();
     }
@@ -54,7 +55,7 @@ public class LeaveApplicationServiceImpl extends ServiceImpl<LeaveApplicationMap
     @Override
     public List<LeaveApplication> getLAByStatus(int status){
         QueryWrapper<LeaveApplication> leaveApplicationQueryWrapper = new QueryWrapper<>();
-        leaveApplicationQueryWrapper.eq("status",status);
+        leaveApplicationQueryWrapper.eq("app_status",status);
         return leaveApplicationMapper.selectList(leaveApplicationQueryWrapper);
     }
 
@@ -75,7 +76,7 @@ public class LeaveApplicationServiceImpl extends ServiceImpl<LeaveApplicationMap
     @Override
     public List<LeaveApplication> getLAByStuIdAndStatus(String stuId, int status){
         QueryWrapper<LeaveApplication> leaveApplicationQueryWrapper = new QueryWrapper<>();
-        leaveApplicationQueryWrapper.eq("stu_id",stuId).eq("status",status);
+        leaveApplicationQueryWrapper.eq("stu_id",stuId).eq("app_status",status);
         return leaveApplicationMapper.selectList(leaveApplicationQueryWrapper);
     }
 
@@ -91,7 +92,7 @@ public class LeaveApplicationServiceImpl extends ServiceImpl<LeaveApplicationMap
         utilDate = (java.util.Date)calendar.getTime();
 //java.util.Date日期转换成转成java.sql.Date格式
         Date daysBefore =new Date(utilDate.getTime());
-        leaveApplicationQueryWrapper.eq("status", appSubmit).between("current_date",daysBefore,currentDate);
+        leaveApplicationQueryWrapper.eq("app_status", appSubmit).between("my_date",daysBefore,currentDate);
         return leaveApplicationMapper.selectList(leaveApplicationQueryWrapper);
     }
 
@@ -100,8 +101,8 @@ public class LeaveApplicationServiceImpl extends ServiceImpl<LeaveApplicationMap
         long d = System.currentTimeMillis();
         Date currentDate = new Date(d);
         QueryWrapper<LeaveApplication> leaveApplicationQueryWrapper = new QueryWrapper<>();
-        LeaveApplication leaveApplication = getOne(leaveApplicationQueryWrapper.eq("status",Const.appDAApprove)
-                                                .orderByDesc("current_date"));
+        LeaveApplication leaveApplication = getOne(leaveApplicationQueryWrapper.eq("app_status",Const.appDAApprove)
+                                                .orderByDesc("my_date"));
         return currentDate.after(leaveApplication.getExpLeavdate()) && currentDate.before(leaveApplication.getExpRetdate());
     }
 
@@ -110,11 +111,11 @@ public class LeaveApplicationServiceImpl extends ServiceImpl<LeaveApplicationMap
         Admin currentAdmin = adminMapper.selectById(adminId);
         QueryWrapper<LeaveApplication> leaveApplicationQueryWrapper = new QueryWrapper<>();
         if(currentAdmin.getAdminType() == roleInstructor) {
-            leaveApplicationQueryWrapper.eq("admin_id", adminId).eq("status", appSubmit);
+            leaveApplicationQueryWrapper.eq("admin_id", adminId).eq("app_status", appSubmit);
             return leaveApplicationMapper.selectList(leaveApplicationQueryWrapper);
         }
         else if(currentAdmin.getAdminType() == roleDeptAdmin){
-            leaveApplicationQueryWrapper.eq("admin_id", adminId).eq("status", appITApprove);
+            leaveApplicationQueryWrapper.eq("admin_id", adminId).eq("app_status", appITApprove);
             return leaveApplicationMapper.selectList(leaveApplicationQueryWrapper);
         }
         else if(currentAdmin.getAdminType() == roleSuperAdmin){

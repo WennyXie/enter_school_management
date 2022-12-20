@@ -40,6 +40,7 @@ public class LeaveApplicationController {
     //学生填写离校申请
     @PostMapping("/fillin")
     public Result fillInLA(@RequestBody LeaveApplicationDto leaveApplicationDto){
+        System.out.println(leaveApplicationDto);
         leaveApplicationService.saveLA(leaveApplicationDto);
         return Result.succ("出校申请提交成功！等待审核中——");
     }
@@ -53,7 +54,7 @@ public class LeaveApplicationController {
     }
 
     //检查学生要去的地区是否为风险地区
-    @PostMapping("/check")
+    @GetMapping("/check")
     public Result checkLA(@RequestParam Long LAId){
         LeaveApplication LA = leaveApplicationService.getById(LAId);
         List<RiskyPlaces> riskyPlaces = riskyPlacesService.getAllRP();
@@ -71,26 +72,26 @@ public class LeaveApplicationController {
     public Result rejectLA(@RequestParam Long LAId,@RequestParam String rejectReason,@RequestParam String adminID){
         LeaveApplication LA = leaveApplicationService.getById(LAId);
         LA.setRejectReason(rejectReason);
-        LA.setStatus(appReject);
+        LA.setAppStatus(appReject);
         LA.setCurrentAdminId(adminID);
         leaveApplicationService.updateById(LA);
         return Result.succ("拒绝离校申请成功！");
     }
 
     //同意学生的离校申请
-    @PostMapping("/approve")
+    @GetMapping("/approve")
     public Result approveLA(@RequestParam Long LAId,@RequestParam String adminID){
         LeaveApplication LA = leaveApplicationService.getById(LAId);
         Admin currentAdmin = adminService.getById(adminID);
         LA.setCurrentAdminId(adminID);
         if(currentAdmin.getAdminType() == roleInstructor) {
-            LA.setStatus(appITApprove);
+            LA.setAppStatus(appITApprove);
             LA.setAdminId(departmentService.getById(stuClassService.getClassByAdmin(adminID).getDeptId()).getDeptAdminId());
             leaveApplicationService.updateById(LA);
             return Result.succ("辅导员审批通过成功！");
         }
         else if(currentAdmin.getAdminType() == roleDeptAdmin){
-            LA.setStatus(appDAApprove);
+            LA.setAppStatus(appDAApprove);
             leaveApplicationService.updateById(LA);
             return Result.succ("院系管理员审批通过成功！");
         }

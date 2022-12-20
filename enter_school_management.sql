@@ -68,10 +68,10 @@ CREATE TABLE `comin_approve`  (
   `admin_id` char(8) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `comin_reason` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `exp_comindate` date NOT NULL,
-  `status` int(0) NOT NULL,
+  `app_status` int(0) NOT NULL,
   `current_admin_id` char(8) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `reject_reason` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `current_date` date NOT NULL,
+  `my_date` date NOT NULL,
   PRIMARY KEY (`comin_app_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
@@ -153,10 +153,10 @@ CREATE TABLE `leave_application`  (
   `dest_street` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `exp_leavdate` date NOT NULL,
   `exp_retdate` date NOT NULL,
-  `status` int(0) NOT NULL,
+  `app_status` int(0) NOT NULL,
   `current_admin_id` char(8) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `reject_reason` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `current_date` date NOT NULL,
+  `my_date` date NOT NULL,
   PRIMARY KEY (`leav_app_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
