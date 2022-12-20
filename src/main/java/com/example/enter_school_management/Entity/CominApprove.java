@@ -19,9 +19,9 @@ public class CominApprove {
     private String cominReason;
     @NotBlank(message = "预计返校日期不能为空")
     private Date expComindate;
-    private Date date;
     @NotBlank(message = "申请状态不能为空")
-    private Integer status;
+    private Integer appStatus;
     private String currentAdminId;
     private String rejectReason;
+    private Date myDate;
 }

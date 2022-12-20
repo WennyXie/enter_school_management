@@ -40,6 +40,7 @@ public class CominApproveController {
     //学生填写返校申请
     @PostMapping("/fillin")
     public Result fillInCA(@RequestBody CominApproveDto cominApproveDto){
+        System.out.println(cominApproveDto);
         cominApproveService.saveCA(cominApproveDto);
         return Result.succ("返校申请提交成功！等待审核中——");
     }
@@ -53,7 +54,7 @@ public class CominApproveController {
     }
 
     //检查返回的7日健康日报是否有异常
-    @PostMapping("/check")
+    @GetMapping("/check")
     public Result checkCA(@RequestParam Long CAId){
         CominApprove CA = cominApproveService.getById(CAId);
         List<HealthDaily> healthDailies = healthDailyService.getLastnDayHealthDaily(CA.getStuId(),7);
@@ -70,26 +71,27 @@ public class CominApproveController {
     public Result rejectLA(@RequestParam Long CAId,@RequestParam String rejectReason,@RequestParam String adminID){
         CominApprove CA = cominApproveService.getById(CAId);
         CA.setRejectReason(rejectReason);
-        CA.setStatus(appReject);
+        CA.setAppStatus(appReject);
         CA.setCurrentAdminId(adminID);
+        System.out.println(CA);
         cominApproveService.updateById(CA);
         return Result.succ("拒绝返校申请成功！");
     }
 
     //管理员同意学生的返校申请
-    @PostMapping("/approve")
+    @GetMapping("/approve")
     public Result approveCA(@RequestParam Long CAId,@RequestParam String adminID){
         CominApprove CA = cominApproveService.getById(CAId);
         Admin currentAdmin = adminService.getById(adminID);
         CA.setCurrentAdminId(adminID);
         if(currentAdmin.getAdminType() == roleInstructor) {
-            CA.setStatus(appITApprove);
+            CA.setAppStatus(appITApprove);
             cominApproveService.updateById(CA);
             CA.setAdminId(departmentService.getById(stuClassService.getClassByAdmin(adminID).getDeptId()).getDeptAdminId());
             return Result.succ("辅导员审批通过成功！");
         }
         else if(currentAdmin.getAdminType() == roleDeptAdmin){
-            CA.setStatus(appDAApprove);
+            CA.setAppStatus(appDAApprove);
             cominApproveService.updateById(CA);
             List<Permission> permissions = permissionService.getPermissionByStuid(CA.getStuId());
             for(Permission p: permissions){

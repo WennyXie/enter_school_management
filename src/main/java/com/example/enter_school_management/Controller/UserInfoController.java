@@ -13,6 +13,8 @@ import com.example.enter_school_management.Service.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/UserInfo")
@@ -51,5 +53,11 @@ public class UserInfoController {
         StudentService.update(Student);
     }
 
+    @GetMapping("/allStudent")
+    public Result getallStudenList(@RequestParam String adminId){
+        StuClass aClass = StuClassService.getClassByAdmin(adminId);
+        List<Student> studntList = StudentService.getByClass(aClass.getClassId());
+        return Result.succ("获取学生数据成功", studntList);
+    }
 }
 
