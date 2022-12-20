@@ -48,8 +48,8 @@
                     </el-table-column>
                     <el-table-column label="操作" >
                         <template #default="scope">
-                            <button class="table_button edit" @click="check(scope.row,scope.$index)" v-if="scope.row.appStatus === 0">查看</button>
-                            <button class="table_button edit" disabled v-if="scope.row.appStatus !== 0" >查看</button>
+                            <button class="table_button edit" @click="check(scope.row,scope.$index)" v-if="scope.row.appStatus === 1">检查</button>
+                            <button class="table_button edit" disabled v-if="scope.row.appStatus !== 1" >检查</button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -57,7 +57,34 @@
         </el-row>
     </div>
 
+    <el-dialog
+            title="检查结果"
+            v-model="dialogVisible"
+            width="500px"
+            :before-close="handleClose">
+        <p>{{message}}</p>
+        <el-row>
+            <el-col span="5">
+                <el-button @click="permit" size="default" type="primary">同意</el-button>
+            </el-col>
+            <el-col span="5">
+                <el-button @click="reject" style="background-color: #E9EEF4" size="default">拒绝</el-button>
+            </el-col>
+        </el-row>
+    </el-dialog>
 
+    <el-dialog
+            title="拒绝理由"
+            v-model="dialogVisible2"
+            width="500px"
+            :before-close="handleClose2">
+        <el-input v-model="message" style="width: 400px" placeholder="输入拒绝理由"></el-input>
+        <el-row>
+            <el-col span="5">
+                <el-button @click="submit" size="default" type="primary">提交</el-button>
+            </el-col>
+        </el-row>
+    </el-dialog>
 
 </template>
 
@@ -67,6 +94,9 @@
         name: "stuApplication",
         data(){
             return {
+                message:'',
+                dialogVisible:false,
+                dialogVisible2:false,
                 group: [
                     {
                         groupname:'入校申请'
@@ -84,12 +114,20 @@
                 ],
                 querrystatus:'',
                 type:0,
+                CAId:'',
+                LAId:'',
                 application:[],
                 enter:[],
                 leave:[],
             }
         },
         methods:{
+            handleClose(){
+                this.dialogVisible = false
+            },
+            handleClose2(){
+                this.dialogVisible2 = false
+            },
             tableRowClassName({row,rowIndex}) {
                 row.index = rowIndex+1;
             },
@@ -106,22 +144,90 @@
                 console.log(val);
             },
             check(row,index){
-                ElNotification({
-                    title: '原因',
-                    message: this.application[index].rejectReason,
-                    type: '',
-                });
+                if(this.type === 0){ //入校
+                    this.CAId =row.cominAppId
+                    this.$http.get('http://localhost:8006/CA/check',{
+                        params:{
+                            CAId:row.cominAppId,
+                        }
+                    }).then(res=>{
+                        this.message = res.data.msg;
+                        this.dialogVisible = true
+                    })
+                }else{
+                    this.LAId = row.leavAppId
+                    this.$http.get('http://localhost:8006/LA/check',{
+                        params:{
+                            LAId:row.leavAppId,
+                        }
+                    }).then(res=>{
+                        this.message = res.data.msg;
+                        this.dialogVisible = true
+                    })
+                }
+            },
+            permit(){
+                if(this.type === 0){ //入校
+                    this.$http.get('http://localhost:8006/CA/approve',{
+                        params:{
+                            CAId:this.CAId,
+                            adminID:sessionStorage.getItem('token')
+                        }
+                    }).then(res=>{
+                        this.$message({
+                            message: "审批完成",
+                            type: 'success'
+                        });
+                        this.dialogVisible=false;
+                    }).catch(err=>{
+                        this.$message({
+                            message: "审批失败",
+                            type: 'danger'
+                        });
+                    })
+
+                }else{
+                    this.$http.get('http://localhost:8006/LA/approve',{
+                        params:{
+                            LAId:this.LAId,
+                            adminID:sessionStorage.getItem('token')
+                        }
+                    }).then(res=>{
+                        this.$message({
+                            message: "审批完成",
+                            type: 'success'
+                        });
+                        this.dialogVisible=false;
+                    }).catch(err=>{
+                        this.$message({
+                            message: "审批失败",
+                            type: 'danger'
+                        });
+                    })
+
+                }
+
+            },
+            reject(){
+                this.message='';
+                this.dialogVisible2=true;
+                this.dialogVisible = false;
+            },
+            submit(){
+
+
             },
             getenter(){
-                this.$http.get('http://localhost:8006/CA/myCA',{
-                    params:{
-                        stuId:sessionStorage.getItem('token')
-                    }
-                }).then(res=>{
+                let data={
+                    id:sessionStorage.getItem('token'),
+                    status:"4"
+                }
+                this.$http.post('http://localhost:8006/CA/instr/stuCA',data).then(res=>{
                     console.log('res',res.data.data);
                     this.enter =res.data.data[0]
                     this.application=this.enter
                 }).catch(err=>{
+                    console.log(err)
                     this.$message({
                         message: "获取失败",
                         type: 'danger'
@@ -130,11 +236,11 @@
                 this.getleave()
             },
             getleave(){
-                this.$http.get('http://localhost:8006/LA/myLA',{
-                    params:{
-                        stuId:sessionStorage.getItem('token')
-                    }
-                }).then(res=>{
+                let data={
+                    id:sessionStorage.getItem('token'),
+                    status:"4"
+                }
+                this.$http.post('http://localhost:8006/LA/instr/stuLA',data).then(res=>{
                     console.log('res',res.data.data);
                     this.leave =res.data.data[0]
                 }).catch(err=>{
@@ -150,7 +256,7 @@
                     status:String(this.querrystatus)
                 }
                 if(this.type === 0){ //入校
-                    this.$http.post('http://localhost:8006/CA/stuCA',data).then(res=>{
+                    this.$http.post('http://localhost:8006/CA/instr/stuCA',data).then(res=>{
                         this.application = res.data.data[0];
                     }).catch(err=>{
                         this.$message({
@@ -159,7 +265,7 @@
                         });
                     })
                 }else{
-                    this.$http.post('http://localhost:8006/LA/stuLA',data).then(res=>{
+                    this.$http.post('http://localhost:8006/LA/instr/stuLA',data).then(res=>{
                         this.application = res.data.data[0];
                     }).catch(err=>{
                         this.$message({
@@ -178,5 +284,5 @@
 </script>
 
 <style scoped>
-
+    @import "../../src/style/main.css";
 </style>

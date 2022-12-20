@@ -190,7 +190,7 @@
                 console.log('data',data)
                 this.$http.post('http://localhost:8006/CA/fillin',data).then(res=>{
                     this.$message({
-                        message: '提交成功',
+                        message: res.data.msg,
                         type: 'success'
                     });
                 }).catch(err=>{

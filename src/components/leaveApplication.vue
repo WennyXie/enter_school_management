@@ -165,7 +165,7 @@
             var nowtime = H+':'+Mf+':'+S;
             this.leaveForm.date = nowdate;
             this.leaveForm.time = nowtime;
-            this.getndaysDH();
+            //this.getndaysDH();
         },
         methods: {
             getndaysDH(){
@@ -189,21 +189,23 @@
                 console.log('city',this.leaveForm.city)
                 let data={
                     stuId: this.leaveForm.stuId,
-                    bodyTemperature: this.leaveForm.bodyTemperature,
-                    city:this.leaveForm.city[1],
-                    district:this.leaveForm.city[2],
-                    street:this.leaveForm.city[3],
-                    expdate:this.leaveForm.expdate
+                    adminId: this.leaveForm.fudaoyuanId,
+                    leavReason:this.leaveForm.reason,
+                    destCity:this.leaveForm.city[1],
+                    destDistrict:this.leaveForm.city[2],
+                    destStreet:this.leaveForm.city[3],
+                    expLeavdate:this.leaveForm.expleavdate,
+                    expRetdate:this.leaveForm.expcomindate,
                 }
                 if(this.leaveForm.city[1] === '市辖区'){
-                    data.city = this.leaveForm.city[0]
-                    data.district = this.leaveForm.city[2];
-                    data.street = this.leaveForm.city[3];
+                    data.destCity = this.leaveForm.city[0]
+                    data.destDistrict = this.leaveForm.city[2];
+                    data.destStreet = this.leaveForm.city[3];
                 }
                 console.log('data',data)
-                /*this.$http.post('http://localhost:8006/healthdaily/fillin',data).then(res=>{
+                this.$http.post('http://localhost:8006/LA/fillin',data).then(res=>{
                     this.$message({
-                        message: '提交成功',
+                        message: res.data.msg,
                         type: 'success'
                     });
                 }).catch(err=>{
@@ -211,8 +213,7 @@
                         message: "提交失败",
                         type: 'success'
                     });
-                })*/
-
+                })
             },
         }
     }

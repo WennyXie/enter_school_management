@@ -11,7 +11,7 @@
                 <p>你当前一年内的离校时间为{{totalTime}}秒</p>
             </el-tab-pane>
             <el-tab-pane label="班级统计数据" name="fourth">班级统计数据
-
+                <BanjiTojishuju/>
             </el-tab-pane>
         </el-tabs>
     </div>
@@ -20,11 +20,13 @@
 <script>
     import stuApplication from "@/components/stuApplication";
     import stuPermission from "@/components/stuPermission";
+    import BanjiTojishuju from "@/components/BanjiTojishuju";
     export default {
         name: "querry",
         components:{
             stuApplication,
-            stuPermission
+            stuPermission,
+            BanjiTojishuju
         },
         data(){
             return{
