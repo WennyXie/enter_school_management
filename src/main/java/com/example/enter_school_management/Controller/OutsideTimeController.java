@@ -29,7 +29,9 @@ public class OutsideTimeController {
 
     //每日12点记录每位同学离校时长
     @Scheduled(cron = "0 0 0 * * ?")
+    //@Scheduled(cron = "30 * * * * ?")
     public void dailyUpdateOT(){
+        System.out.println("所有同学离校时间已更新");
         outsideTimeService.dailyUpdateOutsideTime();
     }
 

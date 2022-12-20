@@ -67,6 +67,13 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
                 }
             }
         }
+
+        //给所有学生填报平安复旦的状态置0
+        List<Student> studentList = studentService.getAllStudent();
+        for(Student student : studentList){
+            student.setHdUpdated(HDNotUpdated);
+            studentService.updateById(student);
+        }
     }
 
     @Override

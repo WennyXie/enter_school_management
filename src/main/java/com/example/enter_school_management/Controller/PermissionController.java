@@ -30,7 +30,7 @@ public class PermissionController {
     DepartmentService departmentService;
 
     //每日五点更新每位同学的进校权限
-    @Scheduled(cron = "0 0 5 * * ?")
+    @Scheduled(cron = "0 0 0 * * ?")
     void updatePerm(){
         permissionService.dailyUpdatePermission();
     }
