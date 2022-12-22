@@ -11,7 +11,7 @@
  Target Server Version : 80028
  File Encoding         : 65001
 
- Date: 17/12/2022 21:05:41
+ Date: 22/12/2022 15:55:44
 */
 
 SET NAMES utf8mb4;
@@ -20,16 +20,18 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 -- Table structure for admin
 -- ----------------------------
+-- 存储所有级别管理员的表
 DROP TABLE IF EXISTS `admin`;
 CREATE TABLE `admin`  (
-  `admin_id` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `admin_type` int(0) NOT NULL,
-  `admin_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `admin_phnum` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `admin_email` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `admin_idtype` int(0) NOT NULL,
-  `admin_idnum` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  PRIMARY KEY (`admin_id`) USING BTREE
+  `admin_id` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 管理员用户名
+  `admin_type` int(0) NOT NULL, -- 管理员类型 1对应辅导员，2对应院系管理员，3对应超级管理员
+  `admin_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 管理员姓名
+  `admin_phnum` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 管理员手机号码
+  `admin_email` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 管理员邮箱
+  `admin_idtype` int(0) NOT NULL, -- 管理员身份证件类型
+  `admin_idnum` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 管理员身份证件号码
+  PRIMARY KEY (`admin_id`) USING BTREE,
+  UNIQUE KEY `admin_idnum` (`admin_idnum`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -42,13 +44,15 @@ INSERT INTO `admin` VALUES ('87654321', 2, '付雁', '13818185110', 'fy@gmail.co
 -- ----------------------------
 -- Table structure for campus
 -- ----------------------------
+-- 校区表
 DROP TABLE IF EXISTS `campus`;
 CREATE TABLE `campus`  (
-  `campus_id` bigint(0) NOT NULL AUTO_INCREMENT,
-  `campus_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `campus_status` int(0) NOT NULL,
-  PRIMARY KEY (`campus_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+  `campus_id` bigint(0) NOT NULL AUTO_INCREMENT, -- 校区自增id
+  `campus_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 校区名称
+  `campus_status` int(0) NOT NULL, -- 校区管控情况 0代表被管控，1代表解封
+  PRIMARY KEY (`campus_id`) USING BTREE,
+	UNIQUE KEY `campus_name` (`campus_name`) USING BTREE	
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of campus
@@ -61,17 +65,19 @@ INSERT INTO `campus` VALUES (4, '张江', 1);
 -- ----------------------------
 -- Table structure for comin_approve
 -- ----------------------------
+-- 入校申请表
 DROP TABLE IF EXISTS `comin_approve`;
 CREATE TABLE `comin_approve`  (
-  `comin_app_id` bigint(0) NOT NULL AUTO_INCREMENT,
-  `stu_id` char(11) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `admin_id` char(8) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `comin_reason` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `exp_comindate` date NOT NULL,
-  `app_status` int(0) NOT NULL,
-  `current_admin_id` char(8) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `reject_reason` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `my_date` date NOT NULL,
+  `comin_app_id` bigint(0) NOT NULL AUTO_INCREMENT, -- 自增id
+  `stu_id` char(11) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 申请学生学号
+  `admin_id` char(8) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, 
+	 -- 目标管理员用户名，例：学生应该交给对应班级的辅导员，辅导员若同意应该交给对应院系的管理员
+  `comin_reason` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 入校原因
+  `exp_comindate` date NOT NULL, -- 预期返校时间
+  `app_status` int(0) NOT NULL, -- 申请表状态 0代表被拒绝，1代表已提交，2代表辅导员已通过，3代表院系辅导员已通过
+  `current_admin_id` char(8) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, -- 目前操作的辅导员用户名
+  `reject_reason` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, -- 驳回原因
+  `my_date` date NOT NULL, -- 提交日期
   PRIMARY KEY (`comin_app_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
@@ -83,13 +89,16 @@ INSERT INTO `comin_approve` VALUES (1, '20302010061', '12345678', '回学校', '
 -- ----------------------------
 -- Table structure for department
 -- ----------------------------
+-- 学院表
 DROP TABLE IF EXISTS `department`;
 CREATE TABLE `department`  (
-  `dept_id` bigint(0) NOT NULL AUTO_INCREMENT,
-  `dept_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `dept_admin_id` char(8) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  PRIMARY KEY (`dept_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+  `dept_id` bigint(0) NOT NULL AUTO_INCREMENT, -- 学院自增id
+  `dept_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 学院名
+  `dept_admin_id` char(8) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 学院管理员用户名
+  PRIMARY KEY (`dept_id`) USING BTREE,
+	UNIQUE KEY `dept_name` (`dept_name`) USING BTREE,
+	UNIQUE KEY `dept_admin_id` (`dept_admin_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of department
@@ -99,19 +108,20 @@ INSERT INTO `department` VALUES (1, '计算机科学技术学院', '87654321');
 -- ----------------------------
 -- Table structure for health_daily
 -- ----------------------------
+-- 健康日报表
 DROP TABLE IF EXISTS `health_daily`;
 CREATE TABLE `health_daily`  (
-  `hd_id` bigint(0) NOT NULL AUTO_INCREMENT,
-  `stu_id` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `body_temperature` double NOT NULL,
-  `city` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `district` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `street` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `date` date NOT NULL,
-  `time` time(0) NOT NULL,
-  `hd_status` int(0) NULL DEFAULT NULL,
+  `hd_id` bigint(0) NOT NULL AUTO_INCREMENT, -- 健康日报自增id
+  `stu_id` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 学生学号
+  `body_temperature` double NOT NULL, -- 学生体温，超过37.5度判为异常
+  `city` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 所在城市
+  `district` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 所在区
+  `street` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 所在街道
+  `date` date NOT NULL, -- 填写日期
+  `time` time(0) NOT NULL, -- 填写时间
+  `hd_status` int(0) NULL DEFAULT NULL, -- 健康日报状态 0为异常 1为正常，通过判断风险地区和体温得出
   PRIMARY KEY (`hd_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 23 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of health_daily
@@ -144,19 +154,20 @@ INSERT INTO `health_daily` VALUES (22, '20302010061', 36.8, '上海', '杨浦', 
 -- ----------------------------
 DROP TABLE IF EXISTS `leave_application`;
 CREATE TABLE `leave_application`  (
-  `leav_app_id` bigint(0) NOT NULL AUTO_INCREMENT,
-  `stu_id` char(11) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `admin_id` char(8) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `leav_reason` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `dest_city` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `dest_district` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `dest_street` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `exp_leavdate` date NOT NULL,
-  `exp_retdate` date NOT NULL,
-  `app_status` int(0) NOT NULL,
-  `current_admin_id` char(8) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `reject_reason` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `my_date` date NOT NULL,
+  `leav_app_id` bigint(0) NOT NULL AUTO_INCREMENT, -- 离校申请自增id
+  `stu_id` char(11) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 学生学号
+  `admin_id` char(8) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, 
+  -- 目标管理员用户名，例：学生应该交给对应班级的辅导员，辅导员若同意应该交给对应院系的管理员
+  `leav_reason` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 离校原因
+  `dest_city` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 目的地城市
+  `dest_district` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 目的地区名
+  `dest_street` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 目的地街道
+  `exp_leavdate` date NOT NULL, -- 预计离校时间
+  `exp_retdate` date NOT NULL, -- 预计返校时间
+  `app_status` int(0) NOT NULL, -- 申请表状态 0代表被拒绝，1代表已提交，2代表辅导员已通过，3代表院系辅导员已通过
+  `current_admin_id` char(8) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, -- 目前操作的辅导员用户名
+  `reject_reason` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, -- 驳回原因
+  `my_date` date NOT NULL, -- 提交日期
   PRIMARY KEY (`leav_app_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
@@ -168,17 +179,18 @@ INSERT INTO `leave_application` VALUES (1, '20302010061', '12345678', '回家', 
 -- ----------------------------
 -- Table structure for log
 -- ----------------------------
+-- 进出校记录表
 DROP TABLE IF EXISTS `log`;
 CREATE TABLE `log`  (
-  `log_id` bigint(0) NOT NULL AUTO_INCREMENT,
-  `stu_id` char(11) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `log_date` date NOT NULL,
-  `log_time` time(0) NOT NULL,
-  `log_status` int(0) NOT NULL,
-  `campus_id` bigint(0) NOT NULL,
-  `dept_id` bigint(0) NOT NULL,
+  `log_id` bigint(0) NOT NULL AUTO_INCREMENT, -- 记录自增id
+  `stu_id` char(11) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 学生学号
+  `log_date` date NOT NULL, -- 记录日期
+  `log_time` time(0) NOT NULL, -- 记录时间
+  `log_status` int(0) NOT NULL, -- 记录状态 0为离校，1为进校
+  `campus_id` bigint(0) NOT NULL, -- 校区id
+  `dept_id` bigint(0) NOT NULL, -- 学院id
   PRIMARY KEY (`log_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of log
@@ -195,14 +207,15 @@ INSERT INTO `log` VALUES (9, '20302010061', '2022-12-07', '23:12:55', 0, 1, 1);
 -- ----------------------------
 -- Table structure for outside_time
 -- ----------------------------
+-- 每位同学每日离校时长表
 DROP TABLE IF EXISTS `outside_time`;
 CREATE TABLE `outside_time`  (
-  `ot_id` bigint(0) NOT NULL AUTO_INCREMENT,
-  `stu_id` char(11) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `date` date NOT NULL,
-  `ot_time` mediumtext CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `ot_id` bigint(0) NOT NULL AUTO_INCREMENT, -- 离校时长自增id
+  `stu_id` char(11) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 学号
+  `date` date NOT NULL, -- 对应日期
+  `ot_time` mediumtext CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 离校时长
   PRIMARY KEY (`ot_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1600742829727182854 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1600742829727182855 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of outside_time
@@ -217,14 +230,15 @@ INSERT INTO `outside_time` VALUES (1600742829727182854, '20302010061', '2022-12-
 -- ----------------------------
 -- Table structure for permission
 -- ----------------------------
+-- 进校权限表
 DROP TABLE IF EXISTS `permission`;
 CREATE TABLE `permission`  (
-  `perm_id` bigint(0) NOT NULL AUTO_INCREMENT,
-  `campus_id` bigint(0) NOT NULL,
-  `stu_id` char(11) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `permit_status` int(0) NOT NULL,
+  `perm_id` bigint(0) NOT NULL AUTO_INCREMENT, -- 进校权限自增id
+  `campus_id` bigint(0) NOT NULL, -- 校区id
+  `stu_id` char(11) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 学号
+  `permit_status` int(0) NOT NULL, -- 权限状态 0为无权限，1为有权限
   PRIMARY KEY (`perm_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of permission
@@ -234,14 +248,15 @@ INSERT INTO `permission` VALUES (1, 1, '20302010061', 1);
 -- ----------------------------
 -- Table structure for risky_places
 -- ----------------------------
+-- 风险地区表
 DROP TABLE IF EXISTS `risky_places`;
 CREATE TABLE `risky_places`  (
-  `rp_id` bigint(0) NOT NULL AUTO_INCREMENT,
-  `city` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `district` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `street` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `rp_id` bigint(0) NOT NULL AUTO_INCREMENT, -- 风险地区自增id
+  `city` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 风险城市
+  `district` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 风险区名
+  `street` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 风险街道
   PRIMARY KEY (`rp_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of risky_places
@@ -251,13 +266,14 @@ INSERT INTO `risky_places` VALUES (1, '上海', '杨浦', '长海路街道');
 -- ----------------------------
 -- Table structure for school
 -- ----------------------------
+-- 学校表
 DROP TABLE IF EXISTS `school`;
 CREATE TABLE `school`  (
-  `school_id` bigint(0) NOT NULL AUTO_INCREMENT,
-  `school_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `school_city` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `school_id` bigint(0) NOT NULL AUTO_INCREMENT, -- 学校自增id
+  `school_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 校名
+  `school_city` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 学校所在城市
   PRIMARY KEY (`school_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of school
@@ -268,14 +284,17 @@ INSERT INTO `school` VALUES (2, '复旦大学', '上海');
 -- ----------------------------
 -- Table structure for stu_class
 -- ----------------------------
+-- 班级表
 DROP TABLE IF EXISTS `stu_class`;
 CREATE TABLE `stu_class`  (
-  `class_id` bigint(0) NOT NULL AUTO_INCREMENT,
-  `class_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `dept_id` bigint(0) NOT NULL,
-  `instructor_id` char(8) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  PRIMARY KEY (`class_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+  `class_id` bigint(0) NOT NULL AUTO_INCREMENT, -- 班级id
+  `class_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 班级名
+  `dept_id` bigint(0) NOT NULL, -- 院系id
+  `instructor_id` char(8) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 辅导员用户名
+  PRIMARY KEY (`class_id`) USING BTREE,
+	UNIQUE KEY `instructor_id` (`instructor_id`) USING BTREE,
+	UNIQUE KEY `class_name` (`class_name`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of stu_class
@@ -285,18 +304,19 @@ INSERT INTO `stu_class` VALUES (1, '软工1班', 1, '12345678');
 -- ----------------------------
 -- Table structure for student
 -- ----------------------------
+-- 学生表
 DROP TABLE IF EXISTS `student`;
 CREATE TABLE `student`  (
-  `stu_id` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `stu_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `stu_phnum` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `stu_email` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `stu_idtype` int(0) NOT NULL,
-  `stu_idnum` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `stu_class_id` bigint(0) NOT NULL,
-  `stu_depart_id` bigint(0) NOT NULL,
-  `stu_school_id` bigint(0) NOT NULL,
-  `hd_updated` int(0) NOT NULL,
+  `stu_id` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 学号
+  `stu_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 学生姓名
+  `stu_phnum` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 学生手机号
+  `stu_email` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 学生邮箱
+  `stu_idtype` int(0) NOT NULL, -- 学生身份证件类型
+  `stu_idnum` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 学生身份证件号码
+  `stu_class_id` bigint(0) NOT NULL, -- 学生班级id
+  `stu_depart_id` bigint(0) NOT NULL, -- 学生学院id
+  `stu_school_id` bigint(0) NOT NULL, -- 学生学校id
+  `hd_updated` int(0) NOT NULL, -- 学生今日是否填写健康日报 0为未填写，1为已提交
   PRIMARY KEY (`stu_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
@@ -304,5 +324,11 @@ CREATE TABLE `student`  (
 -- Records of student
 -- ----------------------------
 INSERT INTO `student` VALUES ('20302010061', '谢子璇', '13818485220', 'xzx@gmail.com', 1, '881157829348593', 1, 1, 1, 0);
+
+-- ----------------------------
+-- View structure for instructors
+-- ----------------------------
+DROP VIEW IF EXISTS `instructors`;
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `instructors` AS select `admin`.`admin_id` AS `admin_id`,`admin`.`admin_type` AS `admin_type`,`admin`.`admin_name` AS `admin_name`,`admin`.`admin_phnum` AS `admin_phnum`,`admin`.`admin_email` AS `admin_email`,`admin`.`admin_idtype` AS `admin_idtype`,`admin`.`admin_idnum` AS `admin_idnum` from `admin` where (`admin`.`admin_type` = 1);
 
 SET FOREIGN_KEY_CHECKS = 1;
