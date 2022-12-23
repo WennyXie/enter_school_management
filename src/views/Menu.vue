@@ -49,15 +49,24 @@ export default {
           ],
           deptmenu: [
               {index:"1",path:"/",name: "Home", label: "首页"},
-              {index:"2",path:"/",name:"Home",label:"个人中心",icon:"qiye",children:[
-                      {index:"2-1",path:"/userInfo",name:"userInfo",label:"个人信息"},
+              {index:"2",path:"/",name:"Home",label:"事物处理",icon:"qiye",children:[
+                      {index:"2-1",path:"/deptApplication",name:"deptApplication",label:"离校申请"},
+                      {index:"2-2",path:"/deptApplication",name:"deptApplication",label:"入校申请"},
                   ]
               },
           ],
           supermenu: [
               {index:"1",path:"/",name: "Home", label: "首页"},
-              {index:"2",path:"/",name:"Home",label:"个人中心",icon:"qiye",children:[
-                      {index:"2-1",path:"/userInfo",name:"userInfo",label:"个人信息"},
+              {index:"2",path:"/",name:"Home",label:"学校信息",icon:"qiye",children:[
+                      {index:"2-1",path:"/departmantList",name:"departmantList",label:"院系列表"},
+                  ]
+              },
+              {index:"3",path:"/",name:"Home",label:"学校信息",icon:"qiye",children:[
+                      {index:"3-1",path:"/campusList",name:"campusList",label:"校区列表"},
+                  ]
+              },
+              {index:"4",path:"/",name:"Home",label:"查询",icon:"qiye",children:[
+                      {index:"4-1",path:"/supperQuerry",name:"supperQuerry",label:"查询"},
                   ]
               },
           ],

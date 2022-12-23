@@ -15,7 +15,7 @@
 }
 
 button {
-    background-color: rgb(136, 204, 252); 
+    background-color: rgb(136, 204, 252);
     color:darkslategrey;
     font-size: 13pt;
     font-weight: 600;
@@ -45,7 +45,7 @@ button:hover{
     margin-left:3px;
     margin-right:3px;
     margin-bottom:0;
-    background-color:c; 
+    background-color:c;
     font-size: 10pt;
 }
 .table_button:hover {
@@ -69,14 +69,14 @@ button:hover{
 }
 
 .edit {
-    color: rgb(44, 198, 225); 
+    color: rgb(44, 198, 225);
     background-color:rgb(233, 249, 252);
 }
 .edit:hover {
     background-color:rgb(233, 249, 252);
 }
 .delete {
-    color: rgb(253, 83, 36); 
+    color: rgb(253, 83, 36);
     background-color:rgb(250, 241, 240);
 }
 .delete:hover {
@@ -90,9 +90,10 @@ button:hover{
 input {
     border: none;
     background-color:rgb(233, 238, 244);
-    opacity: 0.8;
+    opacity: 0.9;
     height: 30px;
-    border-radius: 3px;
+    border-radius: 10px;
+    width: 300px;
 }
 
 .form-group {
@@ -106,7 +107,7 @@ input {
     font-size: 11pt;
     font-weight: 500;
     display: flex;
-    width: 250px;
+    width: 600px;
     float: left;
 }
 .input-label {

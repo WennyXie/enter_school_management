@@ -25,6 +25,7 @@
                           :data="application" center
                           align="left" border
                           :row-class-name="tableRowClassName"
+                          max-height="500px"
                 >
                     <el-table-column label="学号" prop="stuId"></el-table-column>
                     <el-table-column label="填写日期" prop="myDate"/>
@@ -34,12 +35,12 @@
                     <el-table-column label="城市" prop="destCity" v-if="type === 1"/>
                     <el-table-column label="区" prop="destDistrict" v-if="type === 1"/>
                     <el-table-column label="街道" prop="destStreet" v-if="type === 1"/>
-                    <el-table-column label="处理状态" prop="appStatus">
+                    <el-table-column label="处理状态" prop="appStatus" width="100px">
                         <template #default = "scope">
                             <el-tag size="large" v-if = "scope.row.appStatus === 0" type="danger">
                                 被拒绝</el-tag>
                             <el-tag size="large" v-else-if="scope.row.appStatus === 1" type="warning">
-                                未处理</el-tag>
+                                辅导员未处理</el-tag>
                             <el-tag size="large" v-else-if="scope.row.appStatus === 2" type="success">
                                 辅导员通过</el-tag>
                             <el-tag size="large" v-else-if="scope.row.appStatus === 3" type="success">
@@ -48,8 +49,8 @@
                     </el-table-column>
                     <el-table-column label="操作" >
                         <template #default="scope">
-                            <button class="table_button edit" @click="check(scope.row,scope.$index)" v-if="scope.row.appStatus === 1">检查</button>
-                            <button class="table_button edit" disabled v-if="scope.row.appStatus !== 1" >检查</button>
+                            <button class="table_button edit" @click="check(scope.row,scope.$index)" v-if="scope.row.appStatus === 2">检查</button>
+                            <button class="table_button edit" disabled v-if="scope.row.appStatus !== 2" >检查</button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -106,7 +107,6 @@
 </template>
 
 <script>
-    import { ElMessage, ElMessageBox,ElNotification } from 'element-plus'
     export default {
         name: "stuApplication",
         data(){
@@ -125,7 +125,7 @@
                 ],
                 thestatus:[
                     {status:0 , name:"被拒绝"},
-                    {status:1 , name:"未处理"},
+                    {status:1 , name:"辅导员未处理"},
                     {status:2 , name:"辅导员同意"},
                     {status:3 , name:"已通过"},
                 ],
@@ -249,15 +249,54 @@
                 this.dialogVisible = false;
             },
             submit(){
+                if(this.type === 0){ //入校
+                    this.$http.get('http://localhost:8006/CA/reject',{
+                        params:{
+                            CAId:this.CAId,
+                            rejectReason:this.message,
+                            adminID:sessionStorage.getItem('token')
+                        }
+                    }).then(res=>{
+                        this.$message({
+                            message: "审批完成",
+                            type: 'success'
+                        });
+                        this.dialogVisible2=false;
+                    }).catch(err=>{
+                        this.$message({
+                            message: "审批失败",
+                            type: 'danger'
+                        });
+                    })
 
+                }else{
+                    this.$http.get('http://localhost:8006/LA/reject',{
+                        params:{
+                            LAId:this.LAId,
+                            rejectReason:this.message,
+                            adminID:sessionStorage.getItem('token')
+                        }
+                    }).then(res=>{
+                        this.$message({
+                            message: "审批完成",
+                            type: 'success'
+                        });
+                        this.dialogVisible2=false;
+                    }).catch(err=>{
+                        this.$message({
+                            message: "审批失败",
+                            type: 'danger'
+                        });
+                    })
 
+                }
             },
             getenter(){
                 let data={
                     id:sessionStorage.getItem('token'),
                     status:"4"
                 }
-                this.$http.post('http://localhost:8006/CA/instr/stuCA',data).then(res=>{
+                this.$http.post('http://localhost:8006/CA/DA/stuCA',data).then(res=>{
                     console.log('res',res.data.data);
                     this.enter =res.data.data[0]
                     this.application=this.enter
@@ -275,7 +314,7 @@
                     id:sessionStorage.getItem('token'),
                     status:"4"
                 }
-                this.$http.post('http://localhost:8006/LA/instr/stuLA',data).then(res=>{
+                this.$http.post('http://localhost:8006/LA/DA/stuLA',data).then(res=>{
                     console.log('res',res.data.data);
                     this.leave =res.data.data[0]
                 }).catch(err=>{
@@ -291,7 +330,7 @@
                     status:String(this.querrystatus)
                 }
                 if(this.type === 0){ //入校
-                    this.$http.post('http://localhost:8006/CA/instr/stuCA',data).then(res=>{
+                    this.$http.post('http://localhost:8006/CA/DA/stuCA',data).then(res=>{
                         this.application = res.data.data[0];
                     }).catch(err=>{
                         this.$message({
@@ -300,7 +339,7 @@
                         });
                     })
                 }else{
-                    this.$http.post('http://localhost:8006/LA/instr/stuLA',data).then(res=>{
+                    this.$http.post('http://localhost:8006/LA/DA/stuLA',data).then(res=>{
                         this.application = res.data.data[0];
                     }).catch(err=>{
                         this.$message({

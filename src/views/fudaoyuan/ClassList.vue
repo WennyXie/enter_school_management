@@ -16,8 +16,12 @@
         },
         data(){
             return{
+                totalTime:'',
                 activeName:'first'
             }
+        },
+        created() {
+
         }
     }
 </script>

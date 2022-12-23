@@ -5,9 +5,6 @@
             <el-form-item label="用户名" prop="num">
                 <el-input v-model="loginForm.num" type="text" placeholder="请输入学号/工号" style="width: 300px"></el-input>
             </el-form-item>
-            <el-form-item label="密码" prop="password">
-                <el-input v-model="loginForm.password" type="password" placeholder="请输入密码" style="width: 300px"></el-input>
-            </el-form-item>
             <el-form-item label="身份" prop="role">
                 <el-select v-model="loginForm.role" placeholder="选择身份">
                     <template v-for="item in option" :key="item.type">
@@ -63,12 +60,14 @@
                 console.log('data',data)
                 _this.$http.post('http://localhost:8006/login/',data).then(res=>{
                     console.log('login',res);
-                    sessionStorage.setItem('token',data.id);
-                    this.$emit('login',data.userType);
+                    if(res.data.msg === "未查询到该学生信息！"){
+                        this.$message.error("学号输入错误")
+                    }else {
+                        sessionStorage.setItem('token', data.id);
+                        this.$emit('login', data.userType);
+                    }
                 }).catch(err=>{
                     console.log('login',err);
-
-
                 })
             },
             resetForm(){

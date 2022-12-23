@@ -9,6 +9,11 @@ import Querry from "../views/student/querry";
 import Application from "../views/fudaoyuan/Application";
 import ClassList from "../views/fudaoyuan/ClassList";
 import OtherInfomation from "../views/fudaoyuan/OtherInfomation";
+import DeptApplication from "@/views/deptAdmin/deptApplication";
+import DeptClassList from "@/views/deptAdmin/deptClassList";
+import CampusList from "@/views/superAdmin/campusList";
+import DepartmantList from "@/views/superAdmin/departmantList";
+import Superquerry from "@/views/superAdmin/superquerry";
 const routes = [
     {
         path: "/login",
@@ -88,6 +93,53 @@ const routes = [
             requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
         }
     },
+    {
+        path: "/deptApplication",
+        name: "deptApplication",
+        component: DeptApplication,
+        meta: {
+            title: "deptApplication",
+            requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+        }
+    },
+    {
+        path: "/deptClassList",
+        name: "deptClassList",
+        component: DeptClassList,
+        meta: {
+            title: "deptClassList",
+            requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+        }
+    },
+    {
+        path: "/departmantList",
+        name: "departmantList",
+        component: DepartmantList,
+        meta: {
+            title: "departmantList",
+            requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+        }
+    },
+    {
+        path: "/campusList",
+        name: "campusList",
+        component: CampusList,
+        meta: {
+            title: "campusList",
+            requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+        }
+    },
+    {
+        path: "/supperQuerry",
+        name: "supperQuerry",
+        component: Superquerry,
+        meta: {
+            title: "supperQuerry",
+            requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+        }
+    },
+
+
 ];
 
 

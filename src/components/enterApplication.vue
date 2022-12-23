@@ -73,9 +73,9 @@
                         <el-table-column prop="street" label="街道" />
                         <el-table-column prop="hdStatus" label="状态">
                             <template #default = "scope">
-                                <el-tag size="large" v-if = "scope.row.hdStatus === 1" type="danger">
+                                <el-tag size="large" v-if = "scope.row.hdStatus === 0" type="danger">
                                     异常</el-tag>
-                                <el-tag size="large" v-else-if="scope.row.hdStatus === 0" type="success">
+                                <el-tag size="large" v-else-if="scope.row.hdStatus === 1" type="success">
                                     正常</el-tag>
                             </template>
 

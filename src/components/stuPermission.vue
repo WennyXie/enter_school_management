@@ -1,5 +1,5 @@
 <template>
-    <el-table :data="permission" style="width: 100%" border>
+    <el-table :data="permission" style="width: 100%" border :key="per_status">
         <el-table-column prop="campus" label="校区" />
         <el-table-column prop="per_status" label="权限"/>
     </el-table>
@@ -19,6 +19,7 @@
                     stuId:sessionStorage.getItem('token')
                 }
             }).then(res=>{
+                console.log("permit",res.data.data[0])
                 //this.permission =res.data.data[0];
                 let data={
                     campus:'',

@@ -8,7 +8,7 @@
                 <stuPermission />
             </el-tab-pane>
             <el-tab-pane label="离校总时长" name="third">离校总时长查询
-                <p>你当前一年内的离校时间为{{totalTime}}秒</p>
+                <p>你当前一年内的离校时间为{{totalTime}}</p>
             </el-tab-pane>
             <el-tab-pane label="班级统计数据" name="fourth">班级统计数据
                 <BanjiTojishuju/>
@@ -42,6 +42,7 @@
                             stuId:sessionStorage.getItem('token')
                         }
                     }).then(res=>{
+                        console.log(res.data.data[0])
                         this.totalTime = res.data.data[0]
                     })
                 }

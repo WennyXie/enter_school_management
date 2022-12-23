@@ -2,17 +2,17 @@
     <div class="container">
         <el-tabs v-model="activeName" @tab-click="handleClick" :key="activeName">
             <el-tab-pane label="申请列表" name="first">申请列表
-                <adminApplication /></el-tab-pane>
+                <deptApplication /></el-tab-pane>
         </el-tabs>
     </div>
 </template>
 
 <script>
-    import adminApplication from "@/components/adminApplication";
+    import deptApplication from "@/components/deptApplication";
     export default {
         name: "application",
         components:{
-            adminApplication,
+            deptApplication,
         },
         data(){
             return{

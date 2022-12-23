@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <el-row>
-            <el-col :span="12" >
+            <el-col :span="11" >
                 <el-table style="width:95%;"
                           :data="group"
                           center
@@ -11,20 +11,21 @@
                           border>
                     <el-table-column label="学号" prop="stuId" min-width="42%"></el-table-column>
                     <el-table-column label="姓名" prop="stuName" min-width="42%"/>
+                    <el-table-column label="健康日报填写情况" prop="hd_updated" min-width="20%" />
 
                     <el-table-column label="操作" min-width="60%">
                         <template #default="scope">
                             <button class="table_button edit"  @click="open(scope.row)">健康日报</button>
                             <button class="table_button delete" @click="querry2(scope.row,scope.$index)">入校权限</button>
-                            <button class="table_button confirm" @click="querry3(scope.row,scope.$index)">离校时长</button>
                             <button class="table_button confirm" @click="querry4(scope.row,scope.$index)">离校申请</button>
                             <button class="table_button confirm" @click="querry5(scope.row,scope.$index)">入校申请</button>
+                            <button class="table_button confirm" @click="querry3(scope.row,scope.$index)" style="width: 120px">一年的离校时长</button>
                         </template>
                     </el-table-column>
                 </el-table>
 
             </el-col>
-            <el-col :span="12">
+            <el-col :span="13">
                 <el-select v-model="querrystatus" placeholder="选择状态" clearable v-if="type===3 || type === 4">
                     <template v-for="item in thestatus" :key="item.status">
                         <el-option :label="item.name" :value="item.status"></el-option>
@@ -56,7 +57,7 @@
                                 已通过</el-tag>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="totaltime" label="离校总时长" v-if="type === 1">
+                    <el-table-column prop="totaltime" label="过去一年的离校总时长" v-if="type === 1">
                     </el-table-column>
                     <el-table-column prop="campus" label="校区" v-if="type === 2"/>
                     <el-table-column prop="per_status" label="权限"  v-if="type === 2"/>
@@ -67,9 +68,9 @@
                     <el-table-column prop="street" label="街道" v-if="type === 0"/>
                     <el-table-column prop="hdStatus" label="状态" v-if="type === 0">
                         <template #default = "scope">
-                            <el-tag size="large" v-if = "scope.row.hdStatus === 1" type="danger">
+                            <el-tag size="large" v-if = "scope.row.hdStatus === 0" type="danger">
                                 异常</el-tag>
-                            <el-tag size="large" v-else-if="scope.row.hdStatus === 0" type="success">
+                            <el-tag size="large" v-else-if="scope.row.hdStatus === 1" type="success">
                                 正常</el-tag>
                         </template>
                     </el-table-column>
@@ -127,7 +128,22 @@
                     }
                 }).then(res=>{
                     console.log('res',res.data.data);
-                    this.group = res.data.data[0]
+                    let data={
+                        stuId:'',
+                        stuName:'',
+                        hd_updated:''
+                    }
+                    for(var i =0;i<res.data.data[0].length;i++){
+                        data={};
+                        data.stuId=res.data.data[0][i].stuId;
+                        data.stuName=res.data.data[0][i].stuName;
+                        if(res.data.data[0][i]. hdUpdated === 1){
+                            data.hd_updated="今日已填写"
+                        }else{
+                            data.hd_updated="今日未填写"
+                        }
+                        this.group.push(data);
+                    }
                 }).catch(err=>{
                     this.$message({
                         message: "获取失败",
