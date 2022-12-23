@@ -15,8 +15,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static com.example.enter_school_management.Common.lang.Const.inSchool;
 
@@ -30,16 +29,12 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogSe
     StuClassService stuClassService;
 
     @Override
-    public Long saveLog(LogDto logDto){
+    public Long saveLog(LogDto logDto, int status){
         Log log = new Log();
         log.setLogId(null);
         log.setStuId(logDto.getStuId());
-        Log lastLog = getLatestLog(logDto.getStuId());
-        int lastStatus = lastLog.getLogStatus();
-        if(lastStatus == inSchool && !Objects.equals(logDto.getCampusId(), lastLog.getCampusId()))
-            return (long) -1;
         log.setCampusId(logDto.getCampusId());
-        log.setLogStatus(1-lastLog.getLogStatus());
+        log.setLogStatus(status);
         Student student = studentService.getById(logDto.getStuId());
         log.setDeptId(stuClassService.getById(student.getStuClassId()).getDeptId());
         long d = System.currentTimeMillis();
@@ -63,5 +58,72 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogSe
         QueryWrapper<Log> logQueryWrapper = new QueryWrapper<>();
         logQueryWrapper.eq("log_date",yesterday).eq("stu_id",stuId).orderByAsc("log_time");
         return logMapper.selectList(logQueryWrapper);
+    }
+
+    @Override
+    public List<Log> getLogByDate(Date yesterday, Integer n){
+        QueryWrapper<Log> logQueryWrapper = new QueryWrapper<>();
+        java.util.Date utilDate = new java.util.Date();
+        Calendar calendar =new GregorianCalendar();
+        calendar.setTime(utilDate);
+        calendar.add(Calendar.DATE, -n);
+        utilDate = (java.util.Date)calendar.getTime();
+        Date ndaysbefor =new Date(utilDate.getTime());
+        System.out.println(ndaysbefor);
+        logQueryWrapper.between("log_date",ndaysbefor,yesterday);
+        return logMapper.selectList(logQueryWrapper);
+    }
+
+    @Override
+    public Log getndaysbeforLog(String stuId, Integer n){
+        QueryWrapper<Log> logQueryWrapper = new QueryWrapper<>();
+        java.util.Date utilDate = new java.util.Date();
+        Calendar calendar =new GregorianCalendar();
+        calendar.setTime(utilDate);
+        calendar.add(Calendar.DATE, -(n+1));
+        utilDate = (java.util.Date)calendar.getTime();
+        Date ndaysbefore =new Date(utilDate.getTime());
+        System.out.println(ndaysbefore);
+        logQueryWrapper.eq("log_date",ndaysbefore).eq("stu_id",stuId).orderByAsc("log_time");
+        List<Log> allLog = logMapper.selectList(logQueryWrapper);
+        System.out.println(allLog);
+        int index = allLog.size();
+        if(index == 0){
+            return null;
+        }
+        return allLog.get(index-1);
+    }
+
+    @Override
+    public List<Student> getndaysnotOut(List<Student> studentList, List<Log> LogList, Integer n){
+        List<Log> LastLogList = new ArrayList<>();
+        for(Student student:studentList){
+            Log lastlog = getLatestLog(student.getStuId());
+            if(lastlog == null){
+                continue;
+            }
+            LastLogList.add(lastlog);
+        }
+        int flag = 0;
+        java.util.Date utilDate = new java.util.Date();
+        Calendar calendar =new GregorianCalendar();
+        calendar.setTime(utilDate);
+        calendar.add(Calendar.DATE, -(n+1));
+        utilDate = (java.util.Date)calendar.getTime();
+        Date nbeforedate =new Date(utilDate.getTime());
+        System.out.println("lastlog");
+        System.out.println(LastLogList);
+        List<Student> reStudent = new ArrayList<>();
+        for(Log log:LastLogList){
+            Date lastdate = log.getLogDate();
+            if(lastdate.before(nbeforedate)){
+                if(log.getLogStatus() == inSchool){
+                    reStudent.add(studentService.getStudentById(log.getStuId()));
+                }
+            }
+        }
+        System.out.println("res");
+        System.out.println(reStudent);
+        return reStudent;
     }
 }

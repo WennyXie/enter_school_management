@@ -3,10 +3,7 @@ package com.example.enter_school_management.Controller;
 import com.example.enter_school_management.Common.Dto.PermDto;
 import com.example.enter_school_management.Common.lang.Const;
 import com.example.enter_school_management.Common.lang.Result;
-import com.example.enter_school_management.Entity.Campus;
-import com.example.enter_school_management.Entity.Permission;
-import com.example.enter_school_management.Entity.StuClass;
-import com.example.enter_school_management.Entity.Student;
+import com.example.enter_school_management.Entity.*;
 import com.example.enter_school_management.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -28,6 +25,10 @@ public class PermissionController {
     StuClassService stuClassService;
     @Autowired
     DepartmentService departmentService;
+
+    @Autowired
+    AdminService adminService;
+
 
     //每日五点更新每位同学的进校权限
     @Scheduled(cron = "0 0 0 * * ?")
@@ -85,12 +86,14 @@ public class PermissionController {
     public Result instrGetStatistic(@RequestParam String adminId){
         //先找出该院系中的所有班级
         List<StuClass> stuClasses = stuClassService.getClassByDept(stuClassService.getClassByAdmin(adminId).getDeptId());
+        List<Admin> adminList = new ArrayList<>();
         //建立每个班级人数的list
         List<Integer> totalStudentNum = new ArrayList<>();
         //建立分班级每位同学入校权限的list
         List<List<Integer>> classPermNum = new ArrayList<>();
         for(StuClass stuClass: stuClasses){
             List<Student> studentList = studentService.getByClass(stuClass.getClassId());
+            adminList.add(adminService.getById(stuClass.getInstructorId()));
             totalStudentNum.add(studentList.size());
             List<Integer> permNum = new ArrayList<>();
             List<Campus> campuses = campusService.getAllCampus();
@@ -108,7 +111,7 @@ public class PermissionController {
             }
             classPermNum.add(permNum);
         }
-        return Result.succ("学生总数和各校区有权限进入的人数已返回",totalStudentNum,classPermNum);
+        return Result.succ("学生总数和各校区有权限进入的人数已返回",stuClasses,adminList,totalStudentNum,classPermNum);
     }
 
     //院系管理员查看本学院生入校权限

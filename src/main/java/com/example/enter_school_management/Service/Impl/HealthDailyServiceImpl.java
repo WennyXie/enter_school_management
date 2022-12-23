@@ -54,6 +54,7 @@ public class HealthDailyServiceImpl extends ServiceImpl<HealthDailyMapper, Healt
     @Override
     public boolean HDisSafe(Long HDid,String schoolCity, List<RiskyPlaces> riskyPlaces){
         HealthDaily healthDaily = getById(HDid);
+        System.out.println(healthDaily);
         if(healthDaily.getBodyTemperature() > sickTemperature){
             healthDaily.setHdStatus(HDUnsafe);
             health_dailyMapper.updateById(healthDaily);

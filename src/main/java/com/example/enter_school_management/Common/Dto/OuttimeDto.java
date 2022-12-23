@@ -10,11 +10,11 @@ public class OuttimeDto {
     @NotBlank(message = "学生信息不能为空")
     Student student;
     @NotBlank(message = "总离校时长不能为空")
-    Long totalOT;
+    String totalOT;
 
     public OuttimeDto(){};
 
-    public OuttimeDto(Student student, Long totalOT){
+    public OuttimeDto(Student student, String totalOT){
         this.setStudent(student);
         this.setTotalOT(totalOT);
     }

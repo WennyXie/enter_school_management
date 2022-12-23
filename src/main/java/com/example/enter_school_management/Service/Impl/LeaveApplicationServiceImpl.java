@@ -69,7 +69,7 @@ public class LeaveApplicationServiceImpl extends ServiceImpl<LeaveApplicationMap
     @Override
     public List<LeaveApplication> getLAByStuId(String stuId){
         QueryWrapper<LeaveApplication> leaveApplicationQueryWrapper = new QueryWrapper<>();
-        leaveApplicationQueryWrapper.eq("stu_id",stuId);
+        leaveApplicationQueryWrapper.eq("stu_id",stuId).orderByAsc("my_date");
         return leaveApplicationMapper.selectList(leaveApplicationQueryWrapper);
     }
 
@@ -101,8 +101,11 @@ public class LeaveApplicationServiceImpl extends ServiceImpl<LeaveApplicationMap
         long d = System.currentTimeMillis();
         Date currentDate = new Date(d);
         QueryWrapper<LeaveApplication> leaveApplicationQueryWrapper = new QueryWrapper<>();
-        LeaveApplication leaveApplication = getOne(leaveApplicationQueryWrapper.eq("app_status",Const.appDAApprove)
+        LeaveApplication leaveApplication = getOne(leaveApplicationQueryWrapper.eq("app_status",Const.appDAApprove).eq("stu_id",stuId)
                                                 .orderByDesc("my_date"));
+        if(leaveApplication == null){
+            return false;
+        }
         return currentDate.after(leaveApplication.getExpLeavdate()) && currentDate.before(leaveApplication.getExpRetdate());
     }
 

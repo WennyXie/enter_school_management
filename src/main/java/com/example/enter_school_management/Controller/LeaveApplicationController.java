@@ -2,24 +2,16 @@ package com.example.enter_school_management.Controller;
 
 import com.example.enter_school_management.Common.Dto.GetLACADto;
 import com.example.enter_school_management.Common.Dto.LeaveApplicationDto;
-import com.example.enter_school_management.Common.lang.Const;
 import com.example.enter_school_management.Common.lang.Result;
-import com.example.enter_school_management.Entity.Admin;
-import com.example.enter_school_management.Entity.LeaveApplication;
-import com.example.enter_school_management.Entity.RiskyPlaces;
-import com.example.enter_school_management.Entity.Student;
+import com.example.enter_school_management.Entity.*;
 import com.example.enter_school_management.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.NotBlank;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.sql.Date;
+import java.util.*;
 
 import static com.example.enter_school_management.Common.lang.Const.*;
-import static java.sql.Types.NULL;
 
 @RestController
 @RequestMapping("/LA")
@@ -36,6 +28,9 @@ public class LeaveApplicationController {
     DepartmentService departmentService;
     @Autowired
     StudentService studentService;
+
+    @Autowired
+    LogService logService;
 
     //学生填写离校申请
     @PostMapping("/fillin")
@@ -68,7 +63,7 @@ public class LeaveApplicationController {
     }
 
     //拒绝学生的离校申请
-    @PostMapping("/reject")
+    @GetMapping("/reject")
     public Result rejectLA(@RequestParam Long LAId,@RequestParam String rejectReason,@RequestParam String adminID){
         LeaveApplication LA = leaveApplicationService.getById(LAId);
         LA.setRejectReason(rejectReason);
@@ -159,10 +154,36 @@ public class LeaveApplicationController {
     }
 
     //过去n天尚未批准的离校申请数量及详细信息
-    @PostMapping("/lastndayUncheck")
+    @GetMapping("/lastndayUncheck")
     public Result lastndayUncheck(@RequestParam int days){
         List<LeaveApplication> leaveApplications = leaveApplicationService.getLastNDayUncheckedLA(days);
         return Result.succ(leaveApplications.size(),leaveApplications);
     }
 
+    //提交申请但未离校
+    @GetMapping("/submitButnotout")
+    public Result submitButnouout(){
+        List<Student> studenlist = studentService.getAllStudent();
+        java.util.Date utilDate = new java.util.Date();
+        Calendar calendar =new GregorianCalendar();
+        calendar.setTime(utilDate);
+        utilDate = (java.util.Date)calendar.getTime();
+        Date current =new Date(utilDate.getTime());
+        List<Student> reStudent = new ArrayList<>();
+        for(Student student:studenlist){
+            List<LeaveApplication> LA = leaveApplicationService.getLAByStuId(student.getStuId());
+            int index = LA.size()-1;
+            if(index < 0){continue;}
+            LeaveApplication LastLA = LA.get(index);
+            Date expLeave = LastLA.getExpLeavdate();
+            Date expReturn = LastLA.getExpRetdate();
+            if(expLeave.before(current) && LastLA.getAppStatus() == appDAApprove &&expReturn.after(current)){
+                Log lastlog = logService.getLatestLog(student.getStuId());
+                if(lastlog.getLogStatus() == inSchool){
+                    reStudent.add(studentService.getStudentById(student.getStuId()));
+                }
+            }
+        }
+        return Result.succ("获取数据成功",reStudent.size(),reStudent);
+    }
 }

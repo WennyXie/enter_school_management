@@ -82,7 +82,7 @@ public class HealthDailyController {
     }
 
     //获取连续n天健康日报时间完全一致的学生数量、个人信息
-    @PostMapping("/SA/nDaysame")
+    @GetMapping("/SA/nDaysame")
     public Result nDaySame(@RequestParam int days){
         List<Student> studentList = studentService.getAllStudent();
         List<Student> badStudents = new ArrayList<>();

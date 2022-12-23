@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -67,7 +68,7 @@ public class CominApproveController {
     }
 
     //管理员拒绝学生的返校申请
-    @PostMapping("/reject")
+    @GetMapping("/reject")
     public Result rejectLA(@RequestParam Long CAId,@RequestParam String rejectReason,@RequestParam String adminID){
         CominApprove CA = cominApproveService.getById(CAId);
         CA.setRejectReason(rejectReason);
@@ -166,10 +167,183 @@ public class CominApproveController {
     }
 
     //过去n天尚未批准的入校申请数量及详细信息
-    @PostMapping("/lastndayUncheck")
+    @GetMapping("/lastndayUncheck")
     public Result lastndayUncheck(@RequestParam int days){
         List<CominApprove> cominApproves = cominApproveService.getLastNDayUncheckedLA(days);
         return Result.succ(cominApproves.size(),cominApproves);
     }
 
+    //班级前n个提交入校申请最多的学生
+    @GetMapping("/class/nmostSubmit")
+    public Result getclassMostSubmit(@RequestParam String adminId , @RequestParam Integer n) {
+        StuClass aClass = stuClassService.getClassByAdmin(adminId); //获取辅导员管理的班级
+        List<Student> studntList = studentService.getByClass(aClass.getClassId());//获取班级的所有学生
+        int stuNum =studntList.size();
+        if(stuNum < n){
+            n =stuNum;
+        }
+        List<Student> Substudents = new ArrayList<>();
+        List<Integer> num = new ArrayList<>();
+        List<Integer> Subnum = new ArrayList<>();
+        List<Integer> indexs = new ArrayList<>();
+        for(Student student:studntList){
+            String id = student.getStuId();
+            List<CominApprove> cominApproveList = cominApproveService.getCAByStuId(id);
+            num.add(cominApproveList.size());
+        }
+        System.out.println(studntList);
+        System.out.println(num);
+        int old = 0;
+        for(int i=0; i < n;i++){
+            Integer max = Collections.max(num);
+            if(max == 0){
+                break;
+            }
+            int index = num.indexOf(max);
+            if( index == 0 && i == 0 ){
+                indexs.add(index);
+                Subnum.add(max);
+                num.remove(index);
+                old = index;
+            }else {
+                if(old > index){
+                    index = index + i - 1;
+                    indexs.add(index);
+                    Subnum.add(max);
+                    num.remove(index-i+1);
+                    old = index-i+1;
+                    continue;
+                }
+                index = index + i;
+                indexs.add(index);
+                Subnum.add(max);
+                num.remove(index-i);
+                old = index-i;
+            }
+        }
+        System.out.println(indexs);
+        for(Integer theIndex:indexs){
+            Substudents.add(studntList.get(theIndex));
+        }
+        if(Substudents.size() == 0){
+            return Result.fail("本班没有人提交入校申请");
+        }
+        return Result.succ("获取数据成功",Subnum,Substudents);
+    }
+
+    //院系前n个提交入校申请最多的学生
+    @GetMapping("/dept/nmostSubmit")
+    public Result getdeptMostSubmit(@RequestParam String adminId , @RequestParam Integer n) {
+        Department department = departmentService.getDepartByAdmin(adminId); //获取所有的院系
+        List<Student> studntList = studentService.getByDepart(department.getDeptId());//获取院系的所有学生
+        int stuNum =studntList.size();
+        if(stuNum < n){
+            n =stuNum;
+        }
+        List<Student> Substudents = new ArrayList<>();
+        List<Integer> num = new ArrayList<>();
+        List<Integer> Subnum = new ArrayList<>();
+        List<Integer> indexs = new ArrayList<>();
+        for(Student student:studntList){
+            String id = student.getStuId();
+            List<CominApprove> cominApproveList = cominApproveService.getCAByStuId(id);
+            num.add(cominApproveList.size());
+        }
+        System.out.println(studntList);
+        System.out.println(num);
+        int old = 0;
+        for(int i=0; i < n;i++){
+            Integer max = Collections.max(num);
+            if(max == 0){
+                break;
+            }
+            int index = num.indexOf(max);
+            if( index == 0 && i == 0 ){
+                indexs.add(index);
+                Subnum.add(max);
+                num.remove(index);
+                old = index;
+            }else {
+                if(old > index){
+                    index = index + i - 1;
+                    indexs.add(index);
+                    Subnum.add(max);
+                    num.remove(index-i+1);
+                    old = index-i+1;
+                    continue;
+                }
+                index = index + i;
+                indexs.add(index);
+                Subnum.add(max);
+                num.remove(index-i);
+                old = index-i;
+            }
+        }
+        System.out.println(indexs);
+        for(Integer theIndex:indexs){
+            Substudents.add(studntList.get(theIndex));
+        }
+        if(Substudents.size() == 0){
+            return Result.fail("本院没有人提交入校申请");
+        }
+        return Result.succ("获取数据成功",Subnum,Substudents);
+    }
+
+    @GetMapping("/school/nmostSubmit")
+    public Result getschoolMostSubmit(@RequestParam Integer n) {
+        List<Student> studntList = studentService.getAllStudent();//获取院系的所有学生
+        int stuNum =studntList.size();
+        if(stuNum < n){
+            n =stuNum;
+        }
+        List<Student> Substudents = new ArrayList<>();
+        List<Integer> num = new ArrayList<>();
+        List<Integer> Subnum = new ArrayList<>();
+        List<Integer> indexs = new ArrayList<>();
+        for(Student student:studntList){
+            String id = student.getStuId();
+            List<CominApprove> cominApproveList = cominApproveService.getCAByStuId(id);
+            num.add(cominApproveList.size());
+        }
+        System.out.println(studntList);
+        System.out.println(num);
+        int old = 0;
+        for(int i=0; i < n;i++){
+            Integer max = Collections.max(num);
+            if(max == 0){
+                break;
+            }
+            int index = num.indexOf(max);
+            if( index == 0 && i == 0 ){
+                indexs.add(index);
+                Subnum.add(max);
+                num.remove(index);
+                old = index;
+            }else {
+                if(old > index){
+                    index = index + i - 1;
+                    indexs.add(index);
+                    Subnum.add(max);
+                    num.remove(index-i+1);
+                    old = index-i+1;
+                    continue;
+                }
+                index = index + i;
+                indexs.add(index);
+                Subnum.add(max);
+                num.remove(index-i);
+                old = index-i;
+            }
+        }
+        System.out.println(indexs);
+        for(Integer theIndex:indexs){
+            Substudents.add(studntList.get(theIndex));
+        }
+        if(Substudents.size() == 0){
+            return Result.fail("本校没有人提交入校申请");
+        }
+        return Result.succ("获取数据成功",Subnum,Substudents);
+    }
 }
+
+

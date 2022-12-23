@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.enter_school_management.Entity.HealthDaily;
 import com.example.enter_school_management.Entity.Log;
 import com.example.enter_school_management.Entity.OutsideTime;
+import com.example.enter_school_management.Common.Dto.OuttimeDto;
 import com.example.enter_school_management.Entity.Student;
 import com.example.enter_school_management.Mapper.OutsideTimeMapper;
 import com.example.enter_school_management.Service.LogService;
@@ -22,6 +23,10 @@ import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Comparator;
+import java.util.stream.Collectors;
 
 import static com.example.enter_school_management.Common.lang.Const.*;
 
@@ -117,5 +122,62 @@ public class OutsideTimeServiceImpl extends ServiceImpl<OutsideTimeMapper, Outsi
         // 计算差多少天
         long day = diff / nd;
         return day >= 1;
+    }
+
+    @Override
+    public List<OutsideTime> getOutsideTime(String stuId){
+        QueryWrapper<OutsideTime> outsideTimeQueryWrapper = new QueryWrapper<>();
+        outsideTimeQueryWrapper.eq("stu_id", stuId);
+        return outsideTimeMapper.selectList(outsideTimeQueryWrapper);
+    }
+
+    @Override
+    public List<OuttimeDto> getnlogestOuttime(List<Student> studentList,Integer n){
+        long totalTime = 0L;
+        List<OuttimeDto> outtimeDtoList = new ArrayList<>();
+        for(Student student:studentList){
+            String stuId = student.getStuId();
+            List<OutsideTime> outsideTimes = getOutsideTime(stuId);
+            if(outsideTimes.size() == 0){
+                continue;
+            }
+            for(OutsideTime outsideTime:outsideTimes){
+                totalTime = totalTime + outsideTime.getOtTime();
+            }
+            String stotalTime=convertMillis(totalTime);
+            OuttimeDto outtimeDto = new OuttimeDto(student,stotalTime);
+            outtimeDtoList.add(outtimeDto);
+            totalTime = 0L;
+        }
+        if(outtimeDtoList.size() == 0){
+            return null;
+        }
+        if(outtimeDtoList.size() < n){
+            n=outtimeDtoList.size();
+        }
+        List<OuttimeDto> reOuttimeList = new ArrayList<>();
+        for(int i=0;i<n;i++){
+            OuttimeDto maxoutTimeDto = outtimeDtoList.stream().max(Comparator.comparing(OuttimeDto::getTotalOT)).get();
+            reOuttimeList.add(maxoutTimeDto);
+            outtimeDtoList.remove(maxoutTimeDto);
+        }
+        return reOuttimeList;
+    }
+
+    @Override
+    public String convertMillis (long duration){
+        duration = duration/1000;
+        if (duration !=  0) {
+            long hour = duration/ 3600;
+            long minute = (duration % 3600) / 60;
+            long second = (duration % 3600) % 60;
+
+            String hourStr = hour == 0 ? "00" : hour > 10 ? hour + "" : "0" + hour;
+            String minuteStr = minute == 0 ? "00" : minute > 10 ? minute + "" : "0" + minute;
+            String secondStr = second == 0 ? "00" : second > 10 ? second + "" : "0" + second;
+
+            return hourStr + "小时" + minuteStr + "分" + secondStr+"秒";
+        }
+        return null;
     }
 }
