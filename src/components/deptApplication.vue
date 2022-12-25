@@ -35,7 +35,7 @@
                     <el-table-column label="城市" prop="destCity" v-if="type === 1"/>
                     <el-table-column label="区" prop="destDistrict" v-if="type === 1"/>
                     <el-table-column label="街道" prop="destStreet" v-if="type === 1"/>
-                    <el-table-column label="处理状态" prop="appStatus" width="100px">
+                    <el-table-column label="处理状态" prop="appStatus">
                         <template #default = "scope">
                             <el-tag size="large" v-if = "scope.row.appStatus === 0" type="danger">
                                 被拒绝</el-tag>

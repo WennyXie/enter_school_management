@@ -42,7 +42,7 @@
             v-model="dialogVisible"
             width="700px"
             :before-close="handleClose">
-        <el-table :data="tabledata" style="width: 100%" border max-height="500px">
+        <el-table :data="tabledata" style="width: 100%" border max-height="800px">
             <el-table-column prop="stuId" label="学号" />
             <el-table-column prop="stuName" label="姓名"/>
             <el-table-column prop="stuEmail" label="邮箱" />

@@ -29,6 +29,7 @@
             </el-table-column>>
             <el-table-column prop="className" label="班级" min-width="8%"/>
             <el-table-column prop="instructorName" label="辅导员名称" min-width="8%"/>
+            <el-table-column prop="instructorId" label="辅导员工号" min-width="8%"/>
             <el-table-column prop="memberNum" label="人数" min-width="8%"/>
         </el-table>
     </div>
@@ -285,6 +286,7 @@
                     let data = {
                         className:'',
                         instructorName:'',
+                        instructorId:'',
                         memberNum:'',
                         stuList:[]
                     };
@@ -295,6 +297,7 @@
                         data={};
                         data.className = res.data.data[0][i].className;
                         data.instructorName = res.data.data[1][i].adminName;
+                        data.instructorId = res.data.data[1][i].adminId;
                         console.log(data)
                         data.memberNum = res.data.data[2][i];
                         List = res.data.data[3][i];

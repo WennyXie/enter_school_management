@@ -11,7 +11,7 @@
  Target Server Version : 80031
  File Encoding         : 65001
 
- Date: 23/12/2022 20:56:52
+ Date: 25/12/2022 11:13:47
 */
 
 SET NAMES utf8mb4;
@@ -267,7 +267,7 @@ INSERT INTO `leave_application` (`leav_app_id`, `stu_id`, `admin_id`, `leav_reas
 INSERT INTO `leave_application` (`leav_app_id`, `stu_id`, `admin_id`, `leav_reason`, `dest_city`, `dest_district`, `dest_street`, `exp_leavdate`, `exp_retdate`, `app_status`, `current_admin_id`, `reject_reason`, `my_date`) VALUES (2, '20302010078', '12345678', '回家', '昆明市', '盘龙区', '龙泉街道', '2022-12-21', '2022-12-31', 1, NULL, NULL, '2022-12-19');
 INSERT INTO `leave_application` (`leav_app_id`, `stu_id`, `admin_id`, `leav_reason`, `dest_city`, `dest_district`, `dest_street`, `exp_leavdate`, `exp_retdate`, `app_status`, `current_admin_id`, `reject_reason`, `my_date`) VALUES (3, '20302010078', '87654321', '回家', '昆明市', '盘龙区', '龙泉街道', '2022-12-20', '2022-12-31', 3, '87654321', NULL, '2022-12-20');
 INSERT INTO `leave_application` (`leav_app_id`, `stu_id`, `admin_id`, `leav_reason`, `dest_city`, `dest_district`, `dest_street`, `exp_leavdate`, `exp_retdate`, `app_status`, `current_admin_id`, `reject_reason`, `my_date`) VALUES (4, '20302010078', '12345678', '回家', '昆明市', '盘龙区', '龙泉街道', '2022-12-21', '2022-12-31', 1, NULL, NULL, '2022-12-19');
-INSERT INTO `leave_application` (`leav_app_id`, `stu_id`, `admin_id`, `leav_reason`, `dest_city`, `dest_district`, `dest_street`, `exp_leavdate`, `exp_retdate`, `app_status`, `current_admin_id`, `reject_reason`, `my_date`) VALUES (5, '20302010061', '12345678', '我要回去', '昆明市', '盘龙区', '龙泉街道', '2022-12-20', '2022-12-26', 3, NULL, NULL, '2022-12-20');
+INSERT INTO `leave_application` (`leav_app_id`, `stu_id`, `admin_id`, `leav_reason`, `dest_city`, `dest_district`, `dest_street`, `exp_leavdate`, `exp_retdate`, `app_status`, `current_admin_id`, `reject_reason`, `my_date`) VALUES (5, '20302010061', '12345678', '我要回去', '昆明市', '盘龙区', '龙泉街道', '2022-12-20', '2023-01-19', 3, NULL, NULL, '2022-12-20');
 COMMIT;
 
 -- ----------------------------
@@ -4174,12 +4174,12 @@ CREATE TABLE `student` (
 BEGIN;
 INSERT INTO `student` (`stu_id`, `stu_name`, `stu_phnum`, `stu_email`, `stu_idtype`, `stu_idnum`, `stu_class_id`, `stu_depart_id`, `stu_school_id`, `hd_updated`) VALUES ('20202010001', '张三三', '18818291185', 'zss@gmail.com', 1, '881157829348592', 3, 2, 1, 0);
 INSERT INTO `student` (`stu_id`, `stu_name`, `stu_phnum`, `stu_email`, `stu_idtype`, `stu_idnum`, `stu_class_id`, `stu_depart_id`, `stu_school_id`, `hd_updated`) VALUES ('20302010001', '张三', '18817291185', 'zlf@gmail.com', 1, '881157829348592', 2, 1, 1, 0);
-INSERT INTO `student` (`stu_id`, `stu_name`, `stu_phnum`, `stu_email`, `stu_idtype`, `stu_idnum`, `stu_class_id`, `stu_depart_id`, `stu_school_id`, `hd_updated`) VALUES ('20302010002', '李四', '18817291185', '1', 1, '881157829348592', 1, 1, 1, 0);
+INSERT INTO `student` (`stu_id`, `stu_name`, `stu_phnum`, `stu_email`, `stu_idtype`, `stu_idnum`, `stu_class_id`, `stu_depart_id`, `stu_school_id`, `hd_updated`) VALUES ('20302010002', '李四', '18817291185', 'ls@gmail.com', 1, '881157829348592', 1, 1, 1, 0);
 INSERT INTO `student` (`stu_id`, `stu_name`, `stu_phnum`, `stu_email`, `stu_idtype`, `stu_idnum`, `stu_class_id`, `stu_depart_id`, `stu_school_id`, `hd_updated`) VALUES ('20302010003', '王五', '18817291185', 'zlf@gmail.com', 1, '881157829348592', 1, 1, 1, 0);
 INSERT INTO `student` (`stu_id`, `stu_name`, `stu_phnum`, `stu_email`, `stu_idtype`, `stu_idnum`, `stu_class_id`, `stu_depart_id`, `stu_school_id`, `hd_updated`) VALUES ('20302010061', '谢子璇', '13818485220', 'xzx@gmail.com', 1, '881157829348593', 1, 1, 1, 1);
 INSERT INTO `student` (`stu_id`, `stu_name`, `stu_phnum`, `stu_email`, `stu_idtype`, `stu_idnum`, `stu_class_id`, `stu_depart_id`, `stu_school_id`, `hd_updated`) VALUES ('20302010077', '李华', '18817291189', 'LH@gmail.com', 1, '881157829348592', 2, 1, 1, 0);
 INSERT INTO `student` (`stu_id`, `stu_name`, `stu_phnum`, `stu_email`, `stu_idtype`, `stu_idnum`, `stu_class_id`, `stu_depart_id`, `stu_school_id`, `hd_updated`) VALUES ('20302010078', '张立凤', '18817291185', 'zlf@gmail.com', 1, '881157829348592', 1, 1, 1, 0);
-INSERT INTO `student` (`stu_id`, `stu_name`, `stu_phnum`, `stu_email`, `stu_idtype`, `stu_idnum`, `stu_class_id`, `stu_depart_id`, `stu_school_id`, `hd_updated`) VALUES ('20302010079', '周子涵', '18817291195', 'zzh@gmail.com', 1, '881157829348592', 2, 1, 1, 0);
+INSERT INTO `student` (`stu_id`, `stu_name`, `stu_phnum`, `stu_email`, `stu_idtype`, `stu_idnum`, `stu_class_id`, `stu_depart_id`, `stu_school_id`, `hd_updated`) VALUES ('20302010079', '周子涵', '18817291195', 'zzh@gami.com', 1, '881157829348592', 2, 1, 1, 0);
 INSERT INTO `student` (`stu_id`, `stu_name`, `stu_phnum`, `stu_email`, `stu_idtype`, `stu_idnum`, `stu_class_id`, `stu_depart_id`, `stu_school_id`, `hd_updated`) VALUES ('20402010002', '李四四', '18817991185', 'lss@gmail.com', 1, '881157829348592', 5, 3, 1, 0);
 INSERT INTO `student` (`stu_id`, `stu_name`, `stu_phnum`, `stu_email`, `stu_idtype`, `stu_idnum`, `stu_class_id`, `stu_depart_id`, `stu_school_id`, `hd_updated`) VALUES ('20502010003', '王五五', '18817691185', 'www@gmail.com', 1, '881157829348592', 7, 4, 1, 1);
 COMMIT;

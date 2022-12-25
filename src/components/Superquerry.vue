@@ -343,6 +343,7 @@
 
             },
             getsubmitButnotleave(){
+                this.type=0;
                 this.$http.get("http://localhost:8006/LA/submitButnotout").then(res=>{
                     let data = {
                         stuId: '',
@@ -373,6 +374,7 @@
                 })
             },
             getsameHD(){
+                this.type=0;
                 if(parseInt(this.nDays2) === 0 || this.nDays2 === ''){
                     this.$message({
                         message:"请输入合法数据",

@@ -118,7 +118,7 @@
                 let update = {
                     stuClassId : _this.userForm.stuClassId,
                     stuDepartId : _this.userForm.stuDepartId,
-                    stuEmail : _this.userForm.stuClassId,
+                    stuEmail : _this.userForm.stuEmail,
                     stuId : _this.userForm.stuId,
                     stuName : _this.userForm.stuName,
                     stuIdnum : _this.userForm.stuIdnum,
