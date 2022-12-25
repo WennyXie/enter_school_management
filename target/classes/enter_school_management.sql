@@ -62,7 +62,7 @@ CREATE TABLE `campus`  (
   `campus_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 校区名称
   `campus_status` int(0) NOT NULL, -- 校区管控情况 0代表被管控，1代表解封
   PRIMARY KEY (`campus_id`) USING BTREE,
-	UNIQUE KEY `campus_name` (`campus_name`) USING BTREE	
+	UNIQUE KEY `campus_name` (`campus_name`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -83,7 +83,7 @@ DROP TABLE IF EXISTS `comin_approve`;
 CREATE TABLE `comin_approve`  (
   `comin_app_id` bigint(0) NOT NULL AUTO_INCREMENT, -- 自增id
   `stu_id` char(11) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 申请学生学号
-  `admin_id` char(8) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, 
+  `admin_id` char(8) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
 	 -- 目标管理员用户名，例：学生应该交给对应班级的辅导员，辅导员若同意应该交给对应院系的管理员
   `comin_reason` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 入校原因
   `exp_comindate` date NOT NULL, -- 预期返校时间
@@ -258,7 +258,7 @@ DROP TABLE IF EXISTS `leave_application`;
 CREATE TABLE `leave_application`  (
   `leav_app_id` bigint(0) NOT NULL AUTO_INCREMENT, -- 离校申请自增id
   `stu_id` char(11) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 学生学号
-  `admin_id` char(8) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, 
+  `admin_id` char(8) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   -- 目标管理员用户名，例：学生应该交给对应班级的辅导员，辅导员若同意应该交给对应院系的管理员
   `leav_reason` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 离校原因
   `dest_city` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, -- 目的地城市
