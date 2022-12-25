@@ -14,6 +14,7 @@ import DeptClassList from "@/views/deptAdmin/deptClassList";
 import CampusList from "@/views/superAdmin/campusList";
 import DepartmantList from "@/views/superAdmin/departmantList";
 import Superquerry from "@/views/superAdmin/superquerry";
+
 const routes = [
     {
         path: "/login",
@@ -144,6 +145,7 @@ const routes = [
 
 
 const router = createRouter({
+    //mode:'hash',
     history: createWebHistory('/'),  // 设置为history模式，就是路径里面没有#,  createWebHashHistory 是默认的，括号里面的就是基础路径，可以理解为项目名称，就是请求路径的基础url
     routes
 });

@@ -9,7 +9,7 @@ module.exports = {
   lintOnSave: false,
   productionSourceMap: true,
   devServer:{
-    port:8006,
+    port:8007,
     proxy:{
       '/api':{
         target:"http://localhost:8006",
@@ -31,5 +31,5 @@ module.exports = {
         .options({
           symbolId: 'icon-[name]'
         })
-  }
+  },
 }
